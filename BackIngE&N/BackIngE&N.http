@@ -1,0 +1,6 @@
+@BackIngE_N_HostAddress = http://localhost:5234
+
+GET {{BackIngE_N_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
