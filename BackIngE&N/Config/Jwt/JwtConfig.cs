@@ -13,10 +13,10 @@ namespace BackIngE_N.Config.Jwt {
     public class JwtConfig {
 
         public IConfiguration _config;
-        
+
 
         public JwtConfig(IConfiguration config) {
-            _config = config; 
+            _config = config;
         }
 
 
@@ -53,26 +53,25 @@ namespace BackIngE_N.Config.Jwt {
 
         public Response ValidateToken(string token) {
 
-            if (string.IsNullOrEmpty(token)) throw new Exception(GeneralMessages.Error);
+            if (string.IsNullOrEmpty(token)) return new Response(GeneralMessages.TokenNotValid, false);
 
             var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.Error);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(jwt.Key);
 
-            tokenHandler.ValidateToken(token, new TokenValidationParameters {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidIssuer = jwt.Issuer,
-                ValidateAudience = true,
-                ValidAudience = jwt.Audience,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
-
-            return new Response("Token valido", true, validatedToken);
-
+            try {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+                return new Response("Token valido", true, validatedToken);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.TokenNotValid, false, e.Message);
+            }
         }
 
     }
