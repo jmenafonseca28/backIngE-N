@@ -4,6 +4,7 @@ using BackIngE_N.Config.Messages;
 using BackIngE_N.DTO.UserrDto;
 using Microsoft.EntityFrameworkCore;
 using BackIngE_N.Models;
+using _bCrypt = BCrypt.Net.BCrypt;
 
 namespace BackIngE_N.Logic.User {
     public class UserrLogic {
@@ -21,7 +22,7 @@ namespace BackIngE_N.Logic.User {
 
             if (u == null) throw new Exception(UserrMessages.ErrorMessages.UserNotFound);
 
-            Response r = _jwtConfig.Login(user, u);
+            Response r = _jwtConfig.generateToken(user, u);
 
             if (r.Success && r.Message.Equals(GeneralMessages.TokenGenerated)) {
                 await UpdateToken(user.Email, ((string)r.Data));
@@ -39,6 +40,25 @@ namespace BackIngE_N.Logic.User {
             _context.Userrs.Update(u);
 
             return await _context.SaveChangesAsync() > 0;
+
+        }
+
+        public async Task<Response> Register(UserDTO user) {
+
+            if (await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() != null) throw new Exception(UserrMessages.ErrorMessages.UserAlreadyExists);
+
+            Userr u = new() {
+                Name = user.Name,
+                LastName = user.LastName,
+                Email = user.Email,
+                Password = _bCrypt.HashPassword(user.Password),
+                Role = "User",
+                Token = null
+            };
+
+            _context.Userrs.Add(u);
+
+            return await _context.SaveChangesAsync() > 0 ? new Response(UserrMessages.SuccessMessages.UserCreated, true) : new Response(UserrMessages.ErrorMessages.UserNotCreated, false);
 
         }
     }

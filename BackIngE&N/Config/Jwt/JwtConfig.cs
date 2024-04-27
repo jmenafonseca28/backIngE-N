@@ -20,11 +20,11 @@ namespace BackIngE_N.Config.Jwt {
         }
 
 
-        public Response Login(UserBase user, Userr u) {
+        public Response generateToken(UserBase user, Userr u) {
 
-            if (user == null || user.Password != u.Password/*!_bCrypt.Verify(user.Password, u.Password)*/) throw new Exception(UserrMessages.ErrorMessages.LoginError);
+            if (user == null || !_bCrypt.Verify(user.Password, u.Password)) throw new Exception(UserrMessages.ErrorMessages.LoginError);
 
-            if (u.Token != null && ValidateToken(u.Token).Success) return new Response(UserrMessages.SuccessMessages.LoginSuccess, true, u.Token);
+            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrMessages.SuccessMessages.LoginSuccess, true, u.Token);
 
             var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.Error);
 
@@ -51,15 +51,14 @@ namespace BackIngE_N.Config.Jwt {
 
         }
 
-        public Response ValidateToken(string token) {
+        public bool ValidateToken(string token) {
 
-            if (string.IsNullOrEmpty(token)) return new Response(GeneralMessages.TokenNotValid, false);
+            if (string.IsNullOrEmpty(token)) return false;
 
             var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.Error);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(jwt.Key);
-
             try {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters {
                     ValidateIssuerSigningKey = true,
@@ -68,9 +67,9 @@ namespace BackIngE_N.Config.Jwt {
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
-                return new Response("Token valido", true, validatedToken);
-            } catch (Exception e) {
-                return new Response(GeneralMessages.TokenNotValid, false, e.Message);
+                return true;
+            } catch (Exception) {
+                return false;
             }
         }
 

@@ -31,6 +31,18 @@ namespace BackIngE_N.Controllers {
 
         }
 
+        [HttpPost]
+        [Route("register")]
+        public async Task<Response> Register([FromBody] UserDTO user) {
+
+            try {
+                return await _userrLogic.Register(user);
+            } catch (Exception e) {
+                return new Response(e.Message, false);
+            }
+
+        }
+
         //[Authorize] // Para si o si tener un token
 
     }
