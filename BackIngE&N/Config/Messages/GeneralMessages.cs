@@ -1,12 +1,12 @@
 ﻿namespace BackIngE_N.Config.Messages {
-    public class GeneralMessages {
+    public static class GeneralMessages {
 
-        public const string SomethingWentWrong = "Algo salió mal";
-        public const string Success = "Éxito";
-        public const string Error = "Error";
-        public const string TokenNotValid = "Token no válido";
-        public const string TokenValid = "Token válido";
-        public const string TokenGenerated = "Token generado";
+        public const string SOMETHINGWENTWRONG = "Algo salió mal";
+        public const string SUCCESS = "Éxito";
+        public const string ERROR = "Error";
+        public const string TOKENNOTVALID = "Token no válido";
+        public const string TOKENVALID = "Token válido";
+        public const string TOKENGENERATED = "Token generado";
 
     }
 }
