@@ -23,13 +23,13 @@ namespace BackIngE_N.Logic.User {
         /// <param name="user">The user credentials.</param>
         /// <returns>A <see cref="Task{Response}"/> representing the asynchronous operation. The task result contains the login response.</returns>
         public async Task<Response> Login(UserBase user) {
-            Userr u = await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() ?? throw new Exception(UserrMessages.ErrorMessages.UserNotFound);
+            Userr u = await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() ?? throw new Exception(UserrMessages.ErrorMessages.USERNOTFOUND);
 
-            if (u == null) throw new Exception(UserrMessages.ErrorMessages.UserNotFound);
+            if (u == null) throw new Exception(UserrMessages.ErrorMessages.USERNOTFOUND);
 
             Response r = _jwtConfig.generateToken(user, u);
 
-            if (r.Success && r.Message.Equals(GeneralMessages.TokenGenerated)) {
+            if (r.Success && r.Message.Equals(GeneralMessages.TOKENGENERATED)) {
                 await UpdateToken(user.Email, ((string)r.Data));
             }
 
@@ -44,7 +44,7 @@ namespace BackIngE_N.Logic.User {
         /// <returns>A task representing the asynchronous operation. The task result contains a boolean indicating whether the token update was successful.</returns>
         private async Task<bool> UpdateToken(string email, string token) {
 
-            Userr u = await _context.Userrs.Where(u => u.Email == email).FirstOrDefaultAsync() ?? throw new Exception(UserrMessages.ErrorMessages.UserNotFound);
+            Userr u = await _context.Userrs.Where(u => u.Email == email).FirstOrDefaultAsync() ?? throw new Exception(UserrMessages.ErrorMessages.USERNOTFOUND);
 
             u.Token = token;
 
@@ -61,7 +61,7 @@ namespace BackIngE_N.Logic.User {
         /// <returns>A <see cref="Task{Response}"/> representing the asynchronous operation. The task result contains a <see cref="Response"/> object indicating the success or failure of the registration.</returns>
         public async Task<Response> Register(UserDTO user) {
 
-            if (await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() != null) throw new Exception(UserrMessages.ErrorMessages.UserAlreadyExists);
+            if (await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() != null) throw new Exception(UserrMessages.ErrorMessages.USERALREDYEXIST);
 
             Userr u = new() {
                 Name = user.Name,
@@ -74,7 +74,7 @@ namespace BackIngE_N.Logic.User {
 
             _context.Userrs.Add(u);
 
-            return await _context.SaveChangesAsync() > 0 ? new Response(UserrMessages.SuccessMessages.UserCreated, true) : new Response(UserrMessages.ErrorMessages.UserNotCreated, false);
+            return await _context.SaveChangesAsync() > 0 ? new Response(UserrMessages.SuccessMessages.USERCREATED, true) : new Response(UserrMessages.ErrorMessages.USERNOTCREATED, false);
 
         }
     }

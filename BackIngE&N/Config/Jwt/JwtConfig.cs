@@ -7,7 +7,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackIngE_N.Config.Jwt {
     public class JwtConfig {
@@ -27,11 +26,11 @@ namespace BackIngE_N.Config.Jwt {
         /// <returns>A response object with the token if the credentials are correct</returns>
         public Response generateToken(UserBase user, Userr u) {
 
-            if (user == null || !_bCrypt.Verify(user.Password, u.Password)) throw new Exception(UserrMessages.ErrorMessages.LoginError);
+            if (user == null || !_bCrypt.Verify(user.Password, u.Password)) throw new Exception(UserrMessages.ErrorMessages.LOGINERROR);
 
-            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrMessages.SuccessMessages.LoginSuccess, true, u.Token);
+            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrMessages.SuccessMessages.LOGINSUCCESS, true, u.Token);
 
-            var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.Error);
+            var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
@@ -52,7 +51,7 @@ namespace BackIngE_N.Config.Jwt {
                 signingCredentials: singIn
             );
 
-            return new Response(GeneralMessages.TokenGenerated, true, new JwtSecurityTokenHandler().WriteToken(token));
+            return new Response(GeneralMessages.TOKENGENERATED, true, new JwtSecurityTokenHandler().WriteToken(token));
 
         }
 
@@ -65,7 +64,7 @@ namespace BackIngE_N.Config.Jwt {
 
             if (string.IsNullOrEmpty(token)) return false;
 
-            var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.Error);
+            var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(jwt.Key);
