@@ -1,5 +1,5 @@
 ﻿namespace BackIngE_N.Config.Messages {
-    public class GeneralMessages {
+    public static class GeneralMessages {
 
         public const string SomethingWentWrong = "Algo salió mal";
         public const string Success = "Éxito";

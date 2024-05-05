@@ -19,7 +19,12 @@ namespace BackIngE_N.Config.Jwt {
             _config = config;
         }
 
-
+        /// <summary>
+        /// Generate a JWT token. If the user already has a token, it will return it.
+        /// </summary>
+        /// <param name="user">The User to validate</param>
+        /// <param name="u">The User from bd</param>
+        /// <returns>A response object with the token if the credentials are correct</returns>
         public Response generateToken(UserBase user, Userr u) {
 
             if (user == null || !_bCrypt.Verify(user.Password, u.Password)) throw new Exception(UserrMessages.ErrorMessages.LoginError);
@@ -51,6 +56,11 @@ namespace BackIngE_N.Config.Jwt {
 
         }
 
+        /// <summary>
+        /// Validates a JWT token.
+        /// </summary>
+        /// <param name="token">The JWT token to validate.</param>
+        /// <returns>True if the token is valid, false otherwise.</returns>
         public bool ValidateToken(string token) {
 
             if (string.IsNullOrEmpty(token)) return false;

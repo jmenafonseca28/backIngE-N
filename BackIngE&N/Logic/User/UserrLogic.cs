@@ -17,6 +17,11 @@ namespace BackIngE_N.Logic.User {
             _jwtConfig = jwtConfig;
         }
 
+        /// <summary>
+        /// Logs in a user with the provided credentials.
+        /// </summary>
+        /// <param name="user">The user credentials.</param>
+        /// <returns>A <see cref="Task{Response}"/> representing the asynchronous operation. The task result contains the login response.</returns>
         public async Task<Response> Login(UserBase user) {
             Userr u = await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() ?? throw new Exception(UserrMessages.ErrorMessages.UserNotFound);
 
@@ -31,6 +36,12 @@ namespace BackIngE_N.Logic.User {
             return r;
         }
 
+        /// <summary>
+        /// Updates the token for a user with the specified email.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="token">The new token to be assigned.</param>
+        /// <returns>A task representing the asynchronous operation. The task result contains a boolean indicating whether the token update was successful.</returns>
         private async Task<bool> UpdateToken(string email, string token) {
 
             Userr u = await _context.Userrs.Where(u => u.Email == email).FirstOrDefaultAsync() ?? throw new Exception(UserrMessages.ErrorMessages.UserNotFound);
@@ -43,6 +54,11 @@ namespace BackIngE_N.Logic.User {
 
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="user">The user information to register.</param>
+        /// <returns>A <see cref="Task{Response}"/> representing the asynchronous operation. The task result contains a <see cref="Response"/> object indicating the success or failure of the registration.</returns>
         public async Task<Response> Register(UserDTO user) {
 
             if (await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() != null) throw new Exception(UserrMessages.ErrorMessages.UserAlreadyExists);
