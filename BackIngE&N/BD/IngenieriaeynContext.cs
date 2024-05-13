@@ -89,6 +89,10 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
 
             entity.HasOne(d => d.User).WithMany(p => p.PlayLists)
                 .HasForeignKey(d => d.UserId)

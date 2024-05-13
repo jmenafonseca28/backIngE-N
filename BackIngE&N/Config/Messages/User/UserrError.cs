@@ -1,5 +1,7 @@
-﻿namespace BackIngE_N.Config.Messages {
-    public static class UserrError {
+﻿namespace BackIngE_N.Config.Messages.User
+{
+    public static class UserrError
+    {
 
         public const string USERNOTFOUND = "Usuario no encontrado";
         public const string USERALREDYEXIST = "Usuario ya existente";

@@ -1,4 +1,6 @@
-﻿namespace BackIngE_N.BD;
+﻿using System.Text.Json.Serialization;
+
+namespace BackIngE_N.BD;
 
 public partial class ChannelPlayList
 {
@@ -10,5 +12,6 @@ public partial class ChannelPlayList
 
     public virtual Channel Channel { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual PlayList Playlist { get; set; } = null!;
 }

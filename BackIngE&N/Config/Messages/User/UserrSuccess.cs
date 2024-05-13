@@ -1,5 +1,7 @@
-﻿namespace BackIngE_N.Config.Messages {
-    public static class UserrSuccess {
+﻿namespace BackIngE_N.Config.Messages.User
+{
+    public static class UserrSuccess
+    {
 
         public const string USERCREATED = "Usuario creado";
         public const string USERUPDATED = "Usuario actualizado";

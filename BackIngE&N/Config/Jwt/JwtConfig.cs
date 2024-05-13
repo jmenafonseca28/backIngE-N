@@ -7,8 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BackIngE_N.Config.Messages.User;
 
-namespace BackIngE_N.Config.Jwt {
+namespace BackIngE_N.Config.Jwt
+{
     public class JwtConfig {
 
         public IConfiguration _config;
