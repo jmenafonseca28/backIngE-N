@@ -1,5 +1,4 @@
 ﻿using BackIngE_N.BD;
-using BackIngE_N.Config.Messages;
 using BackIngE_N.Config.Messages.PlayList;
 using BackIngE_N.DTO.PlayList;
 using BackIngE_N.Models;
@@ -20,6 +19,24 @@ namespace BackIngE_N.Logic {
                 .ThenInclude(p => p.Channel).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
 
             return new Response(PlayListSuccess.PLAYLISTGET,true,p);
+        }
+
+        public async Task<Response> GetPlayListByUserID(Guid idUser) {
+
+            List<PlayList> p = await _context.PlayLists.Where(p => p.UserId == idUser).ToListAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
+
+            List<PlayListDTO> playList = [];
+
+            foreach(PlayList pl in p) {
+                PlayListDTO playListDTO = new() {
+                    Id = pl.Id,
+                    Name = pl.Name,
+                    UserId = pl.UserId,
+                };
+                playList.Add(playListDTO);
+            }
+
+            return new Response(PlayListSuccess.PLAYLISTGET,true,playList);
         }
 
         /*public async Task<Response> CreatePlayList(PlayListDTO playList) {

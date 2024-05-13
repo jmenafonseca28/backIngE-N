@@ -6,7 +6,5 @@
 
         public string Name { get; set; } = null!;
 
-        //public virtual ICollection<ChannelPlayList> ChannelPlayLists { get; set; } = new List<ChannelPlayList>();
-
     }
 }

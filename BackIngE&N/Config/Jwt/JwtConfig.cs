@@ -2,7 +2,6 @@
 using BackIngE_N.Config.Messages;
 using BackIngE_N.DTO.UserrDto;
 using BackIngE_N.Models;
-using _bCrypt = BCrypt.Net.BCrypt;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

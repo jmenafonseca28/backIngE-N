@@ -16,13 +16,14 @@ namespace BackIngE_N.Controllers {
         }
 
         /*[HttpGet]
-        public async Task<IActionResult> GetPlayLists() {
+        [Route("getPlayListsByUserId/{id}")]
+        public async Task<Response> GetPlayLists() {
             var playLists = await _playListService.GetPlayLists();
             return Ok(playLists);
         }*/
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("getById/{id}")]
         public async Task<Response> GetPlayList(Guid id) {
 
             try {
