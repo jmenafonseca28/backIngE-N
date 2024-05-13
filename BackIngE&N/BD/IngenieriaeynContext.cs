@@ -20,6 +20,10 @@ public partial class IngenieriaeynContext : DbContext {
 
     public virtual DbSet<Userr> Userrs { get; set; }
 
+    public virtual DbSet<Security> Securities { get; set; }
+
+    public virtual DbSet<BlockedIP> BlockedIPs { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -126,6 +130,44 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasColumnName("token");
 
             entity.HasIndex(e => e.Email, "UQ_Userr_Email").IsUnique();
+        });
+
+        modelBuilder.Entity<Security>(entity => {
+            entity.HasKey(e => e.Id).HasName("PK__Security__3213E83F930700BE");
+
+            entity.ToTable("Security");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.Ip)
+            .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ip");
+            entity.Property(e => e.LoginTime)
+            .HasColumnType("datetime")
+                .HasColumnName("login_time");
+            entity.Property(e => e.StatusLogin)
+            .HasColumnName("status_login");
+
+        });
+
+        modelBuilder.Entity<BlockedIP>(entity => {
+            entity.HasKey(e => e.Id).HasName("PK__BlockedI__3213E83F4711E8FB");
+
+            entity.ToTable("BlockedIP");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.Ip)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ip");
+            entity.Property(e => e.BlockTime)
+                .HasColumnType("datetime")
+                .HasColumnName("block_time");
+
         });
 
         OnModelCreatingPartial(modelBuilder);

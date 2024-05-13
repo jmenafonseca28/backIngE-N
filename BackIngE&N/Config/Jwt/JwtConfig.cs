@@ -26,9 +26,7 @@ namespace BackIngE_N.Config.Jwt {
         /// <returns>A response object with the token if the credentials are correct</returns>
         public Response generateToken(UserBase user, Userr u) {
 
-            if (user == null || !_bCrypt.Verify(user.Password, u.Password)) throw new Exception(UserrMessages.ErrorMessages.LOGINERROR);
-
-            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrMessages.SuccessMessages.LOGINSUCCESS, true, u.Token);
+            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrSuccess.LOGINSUCCESS, true, u.Token);
 
             var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 

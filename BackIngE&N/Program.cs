@@ -4,17 +4,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BackIngE_N.Config.Jwt;
-using BackIngE_N.Logic.User;
+using BackIngE_N.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<JwtConfig>();
 builder.Services.AddScoped<UserrLogic>();
+builder.Services.AddScoped<SecurityLogic>();
+builder.Services.AddScoped<PlayListLogic>();
 
 
 builder.Services.AddDbContext<IngenieriaeynContext>(options =>
@@ -22,7 +24,10 @@ builder.Services.AddDbContext<IngenieriaeynContext>(options =>
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll",
-               builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+               builder => builder
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -41,8 +46,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    // app.UseSwaggerUI();
 }
 
 //app.UseHttpsRedirection();

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BackIngE_N.BD;
+﻿namespace BackIngE_N.BD;
 
 public partial class ChannelPlayList
 {
