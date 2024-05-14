@@ -1,13 +1,14 @@
 ﻿using BackIngE_N.Config.Messages;
 using BackIngE_N.Logic;
 using BackIngE_N.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackIngE_N.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayListController:ControllerBase {
+    public class PlayListController : ControllerBase {
 
         private readonly PlayListLogic _playListLogic;
 
@@ -15,12 +16,16 @@ namespace BackIngE_N.Controllers {
             _playListLogic = playListLogic;
         }
 
-        /*[HttpGet]
-        [Route("getPlayListsByUserId/{id}")]
-        public async Task<Response> GetPlayLists() {
-            var playLists = await _playListService.GetPlayLists();
-            return Ok(playLists);
-        }*/
+        [HttpGet]
+        [Route("getPlayListsByUserId/{idUser}")]
+        //[Authorize]
+        public async Task<Response> GetPlayLists(Guid idUser) {
+            try {
+                return await _playListLogic.GetPlayListByUserID(idUser);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.ERROR, false, e.Message);
+            }
+        }
 
         [HttpGet]
         [Route("getById/{id}")]
@@ -28,8 +33,8 @@ namespace BackIngE_N.Controllers {
 
             try {
                 return await _playListLogic.GetPlayList(id);
-            } catch(Exception e) {
-                return new Response(GeneralMessages.ERROR,false,e.Message);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.ERROR, false, e.Message);
             }
 
         }
