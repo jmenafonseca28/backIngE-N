@@ -17,6 +17,8 @@ builder.Services.AddScoped<JwtConfig>();
 builder.Services.AddScoped<UserrLogic>();
 builder.Services.AddScoped<SecurityLogic>();
 builder.Services.AddScoped<PlayListLogic>();
+builder.Services.AddScoped<ChannelLogic>();
+builder.Services.AddScoped<ExportLogic>();
 
 
 builder.Services.AddDbContext<IngenieriaeynContext>(options =>
@@ -30,16 +32,26 @@ builder.Services.AddCors(options => {
                .AllowAnyHeader());
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+var key = builder.Configuration.GetValue<string>("Jwt:Key");
+var keyBytes = Encoding.UTF8.GetBytes(key);
+
+builder.Services.AddAuthentication(config => {
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+})
     .AddJwtBearer(options => {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+            ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            ValidAudience = builder.Configuration["Jwt:Audience"]
         };
     });
 
@@ -47,14 +59,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
-     app.UseSwaggerUI();
+    app.UseSwaggerUI();
 }
 
 //app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseAuthorization();
 

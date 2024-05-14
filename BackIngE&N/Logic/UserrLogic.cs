@@ -9,8 +9,7 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using BackIngE_N.Config.Messages.User;
 
-namespace BackIngE_N.Logic
-{
+namespace BackIngE_N.Logic {
     public class UserrLogic {
 
         private readonly IngenieriaeynContext _context;
@@ -47,7 +46,7 @@ namespace BackIngE_N.Logic
             Response r = _jwtConfig.generateToken(user, u);
 
             if (r.Success && r.Message.Equals(GeneralMessages.TOKENGENERATED)) {
-                _ = UpdateToken(user.Email, (string)r.Data);
+                await UpdateToken(user.Email, (string)r.Data);
             }
 
             return new Response(r.Message, r.Success,

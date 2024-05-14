@@ -1,4 +1,6 @@
 ﻿using BackIngE_N.Config.Messages;
+using BackIngE_N.Config.Messages.PlayList;
+using BackIngE_N.DTO.PlayList;
 using BackIngE_N.Logic;
 using BackIngE_N.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -8,20 +10,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace BackIngE_N.Controllers {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PlayListController : ControllerBase {
 
         private readonly PlayListLogic _playListLogic;
+        private readonly ExportLogic _exportLogic;
 
-        public PlayListController(PlayListLogic playListLogic) {
+        public PlayListController(PlayListLogic playListLogic, ExportLogic exportLogic) {
             _playListLogic = playListLogic;
+            _exportLogic = exportLogic;
         }
 
         [HttpGet]
-        [Route("getPlayListsByUserId/{idUser}")]
-        //[Authorize]
-        public async Task<Response> GetPlayLists(Guid idUser) {
+        [Route("getPlayListsByUserId/{userId}")]
+        [Authorize]
+        public async Task<Response> GetPlayLists(Guid userId) {
             try {
-                return await _playListLogic.GetPlayListByUserID(idUser);
+                return await _playListLogic.GetPlayListByUserID(userId);
             } catch (Exception e) {
                 return new Response(GeneralMessages.ERROR, false, e.Message);
             }
@@ -30,44 +35,55 @@ namespace BackIngE_N.Controllers {
         [HttpGet]
         [Route("getById/{id}")]
         public async Task<Response> GetPlayList(Guid id) {
-
             try {
                 return await _playListLogic.GetPlayList(id);
             } catch (Exception e) {
                 return new Response(GeneralMessages.ERROR, false, e.Message);
             }
-
         }
 
-        /* [HttpPost]
-         public async Task<IActionResult> CreatePlayList([FromBody] PlayListDTO playListDTO) {
-             var playList = await _playListService.CreatePlayList(playListDTO);
-             return Ok(playList);
-         }
+        [HttpPost]
+        [Route("createPlayList")]
+        public async Task<Response> CreatePlayList([FromBody] PlayListRequest p) {
+            try {
+                return await _playListLogic.CreatePlayList(p.Name, p.UserId);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.ERROR, false, e.Message);
+            }
+        }
 
-         [HttpPut("{id}")]
-         public async Task<IActionResult> UpdatePlayList(Guid id,[FromBody] PlayListDTO playListDTO) {
-             var playList = await _playListService.UpdatePlayList(id,playListDTO);
-             return Ok(playList);
-         }
+        [HttpDelete]
+        [Route("deletePlayList/{id}")]
+        public async Task<Response> DeletePlayList(Guid id) {
+            try {
+                await _playListLogic.DeletePlayList(id);
+                return new Response(PlayListSuccess.PLAYLISTDELETED, true);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.ERROR, false, e.Message);
+            }
+        }
 
-         [HttpDelete("{id}")]
-         public async Task<IActionResult> DeletePlayList(Guid id) {
-             await _playListService.DeletePlayList(id);
-             return Ok();
-         }
+        [HttpPut]
+        [Route("updatePlayList/")]
+        public async Task<Response> UpdatePlayList([FromBody] PlayListDTORequest playListDTO) {
+            try {
+                return await _playListLogic.UpdatePlayList(playListDTO);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.ERROR, false, e.Message);
+            }
+        }
 
-         [HttpPost("AddChannel")]
-         public async Task<IActionResult> AddChannel([FromBody] ChannelPlayListDTO channelPlayListDTO) {
-             var channelPlayList = await _playListService.AddChannel(channelPlayListDTO);
-             return Ok(channelPlayList);
-         }
 
-         [HttpDelete("RemoveChannel/{id}")]
-         public async Task<IActionResult> RemoveChannel(Guid id) {
-             await _playListService.RemoveChannel(id);
-             return Ok();
-         }*/
+        [HttpGet]
+        [Route("exportPlayList/{playlistId}")]
+        public async Task<IActionResult> AddChannel(Guid playlistId) {
+            try {
+                return await _exportLogic.ExportPlayList(playlistId);
+            } catch (Exception e) {
+                return BadRequest(e.Message);
+            }
+        }
+
 
     }
 }

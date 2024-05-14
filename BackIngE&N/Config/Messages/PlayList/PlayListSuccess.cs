@@ -5,6 +5,7 @@
         public static string PLAYLISTUPDATED = "PlayList actualizada con exito";
         public static string PLAYLISTDELETED = "PlayList eliminada con exito";
         public static string PLAYLISTGET = "PlayList obtenida con exito";
+        public static string PLAYLISTEXPORTED = "PlayList exportada con exito";
 
     }
 }

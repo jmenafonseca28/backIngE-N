@@ -14,11 +14,11 @@ namespace BackIngE_N.Logic {
         }
 
         public async Task<Response> GetPlayList(Guid id) {
-            //falta verificar que la playlist sea del usuario que envía el token
+            //TODO: falta verificar que la playlist sea del usuario que envía el token
             PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.ChannelPlayLists)
                 .ThenInclude(p => p.Channel).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
 
-            return new Response(PlayListSuccess.PLAYLISTGET,true,p);
+            return new Response(PlayListSuccess.PLAYLISTGET, true, p);
         }
 
         public async Task<Response> GetPlayListByUserID(Guid idUser) {
@@ -27,7 +27,7 @@ namespace BackIngE_N.Logic {
 
             List<PlayListDTO> playList = [];
 
-            foreach(PlayList pl in p) {
+            foreach (PlayList pl in p) {
                 PlayListDTO playListDTO = new() {
                     Id = pl.Id,
                     Name = pl.Name,
@@ -36,43 +36,41 @@ namespace BackIngE_N.Logic {
                 playList.Add(playListDTO);
             }
 
-            return new Response(PlayListSuccess.PLAYLISTGET,true,playList);
+            return new Response(PlayListSuccess.PLAYLISTGET, true, playList);
         }
 
-        /*public async Task<Response> CreatePlayList(PlayListDTO playList) {
+        public async Task<Response> CreatePlayList(string name, Guid idUser) {
             PlayList p = new PlayList() {
-                Name = playList.Name,
-                Description = playList.Description,
-                Songs = playList.Songs
+                Name = name,
+                UserId = idUser,
             };
 
             await _context.PlayLists.AddAsync(p);
             await _context.SaveChangesAsync();
 
-            return new Response(GeneralMessages.SUCCESS,true,new PlayListResponse(p.Id,p.Name,p.Description,p.Songs));
+            return new Response(PlayListSuccess.PLAYLISTCREATED, true);
         }
-
-        public async Task<Response> UpdatePlayList(int id,PlayListDTO playList) {
-            PlayList p = await _context.PlayLists.Where(p => p.Id == id).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
-
-            p.Name = playList.Name;
-            p.Description = playList.Description;
-            p.Songs = playList.Songs;
-
-            _context.PlayLists.Update(p);
-            await _context.SaveChangesAsync();
-
-            return new Response(GeneralMessages.SUCCESS,true,new PlayListResponse(p.Id,p.Name,p.Description,p.Songs));
-        }
-
-        public async Task<Response> DeletePlayList(int id) {
+        public async Task<Response> DeletePlayList(Guid id) {
+            //VERIFICAR SI ES EL DUEÑO DE LA PLAYLIST
             PlayList p = await _context.PlayLists.Where(p => p.Id == id).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
 
             _context.PlayLists.Remove(p);
             await _context.SaveChangesAsync();
 
-            return new Response(GeneralMessages.SUCCESS,true);
-        }*/
+            return new Response(PlayListSuccess.PLAYLISTDELETED, true);
+        }
+
+        public async Task<Response> UpdatePlayList(PlayListDTORequest playList) {
+            PlayList p = await _context.PlayLists.Where(p => p.Id == playList.Id).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
+
+            p.Name = playList.Name;
+
+            _context.PlayLists.Update(p);
+            await _context.SaveChangesAsync();
+
+            return new Response(PlayListSuccess.PLAYLISTUPDATED, true);
+        }
+
 
     }
 }

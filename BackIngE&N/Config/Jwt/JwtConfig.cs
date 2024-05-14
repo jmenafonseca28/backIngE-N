@@ -8,8 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using BackIngE_N.Config.Messages.User;
 
-namespace BackIngE_N.Config.Jwt
-{
+namespace BackIngE_N.Config.Jwt {
     public class JwtConfig {
 
         public IConfiguration _config;
@@ -29,7 +28,7 @@ namespace BackIngE_N.Config.Jwt
 
             if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrSuccess.LOGINSUCCESS, true, u.Token);
 
-            var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
+            Jwt jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
@@ -38,19 +37,22 @@ namespace BackIngE_N.Config.Jwt
                 new Claim("email", user.Email.ToString()),
             };
 
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims);
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
 
-            var singIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var singIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
-            var token = new JwtSecurityToken(
-                jwt.Issuer,
-                jwt.Audience,
-                claims,
-                expires: DateTime.UtcNow.AddDays(jwt.ExpireTime),
-                signingCredentials: singIn
-            );
+            var tokenDescriptor = new SecurityTokenDescriptor {
+                Subject = claimsIdentity,
+                Expires = DateTime.UtcNow.AddDays(jwt.ExpireTime),
+                SigningCredentials = singIn
+            };
 
-            return new Response(GeneralMessages.TOKENGENERATED, true, new JwtSecurityTokenHandler().WriteToken(token));
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
+
+            return new Response(GeneralMessages.TOKENGENERATED, true, tokenHandler.WriteToken(tokenConfig));
 
         }
 
@@ -68,13 +70,15 @@ namespace BackIngE_N.Config.Jwt
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(jwt.Key);
             try {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters {
+                var validationParameters = new TokenValidationParameters {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
+                    ValidateIssuer = false, 
+                    ValidateAudience = false, 
+                    ClockSkew = TimeSpan.Zero 
+                };
+
+                tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
                 return true;
             } catch (Exception) {
                 return false;
