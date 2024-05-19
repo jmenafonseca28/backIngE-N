@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using BackIngE_N.BD;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BackIngE_N.Config.Jwt;
 using BackIngE_N.Logic;
+using BackIngE_N.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,7 @@ builder.Services.AddScoped<UserrLogic>();
 builder.Services.AddScoped<SecurityLogic>();
 builder.Services.AddScoped<PlayListLogic>();
 builder.Services.AddScoped<ChannelLogic>();
-builder.Services.AddScoped<ExportLogic>();
+builder.Services.AddScoped<ExportImportLogic>();
 
 
 builder.Services.AddDbContext<IngenieriaeynContext>(options =>

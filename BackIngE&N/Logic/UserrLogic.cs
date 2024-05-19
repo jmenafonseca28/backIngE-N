@@ -8,8 +8,10 @@ using _bCrypt = BCrypt.Net.BCrypt;
 using System.Net;
 using Microsoft.Extensions.Options;
 using BackIngE_N.Config.Messages.User;
+using BackIngE_N.Context;
 
-namespace BackIngE_N.Logic {
+namespace BackIngE_N.Logic
+{
     public class UserrLogic {
 
         private readonly IngenieriaeynContext _context;
@@ -27,7 +29,7 @@ namespace BackIngE_N.Logic {
         /// </summary>
         /// <param name="user">The user credentials.</param>
         /// <returns>A <see cref="Task{Response}"/> representing the asynchronous operation. The task result contains the login response.</returns>
-        public async Task<Response> Login(UserBase user, IPAddress ip) {
+        public async Task<Response> Login(UserBase user, IPAddress? ip) {
 
             if (ip != null) {
                 if (await _securityLogic.isBlockedIP(ip)) throw new Exception(UserrError.IPBLOCKED);
@@ -37,11 +39,11 @@ namespace BackIngE_N.Logic {
             Userr u = await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USERNOTFOUND);
 
             if (user == null || !_bCrypt.Verify(user.Password, u.Password)) {
-                await _securityLogic.SaveIP(ip, false);
+                if (ip != null) await _securityLogic.SaveIP(ip, false);
                 throw new Exception(UserrError.LOGINERROR);
             };
 
-            await _securityLogic.SaveIP(ip, true);
+            if (ip != null)  await _securityLogic.SaveIP(ip, true);
 
             Response r = _jwtConfig.generateToken(user, u);
 

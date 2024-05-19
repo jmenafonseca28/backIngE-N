@@ -1,8 +1,10 @@
 ﻿using BackIngE_N.BD;
+using BackIngE_N.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace BackIngE_N.Logic {
+namespace BackIngE_N.Logic
+{
     public class SecurityLogic {
 
         private readonly IngenieriaeynContext _context;
@@ -18,7 +20,7 @@ namespace BackIngE_N.Logic {
         /// <returns>A boolean if is blocked or not</returns>
         public async Task<bool> isBlockedIP(IPAddress ip) {
             if (ip == null) return false;
-            return await _context.BlockedIPs.Where(b => b.Ip == ip.ToString()).FirstOrDefaultAsync() != null;
+            return await _context.BlockedIps.Where(b => b.Ip == ip.ToString()).FirstOrDefaultAsync() != null;
         }
 
         /// <summary>
@@ -28,10 +30,10 @@ namespace BackIngE_N.Logic {
         public void UnblockIP(IPAddress ip) {
             if (ip == null) return;
 
-            BlockedIP b = _context.BlockedIPs.Where(b => b.Ip == ip.ToString()).FirstOrDefault();
+            BlockedIp b = _context.BlockedIps.Where(b => b.Ip == ip.ToString()).FirstOrDefault();
 
             if (b != null) {
-                _context.BlockedIPs.Remove(b);
+                _context.BlockedIps.Remove(b);
                 _ = _context.SaveChangesAsync();
             }
         }
@@ -41,7 +43,7 @@ namespace BackIngE_N.Logic {
         /// </summary>
         /// <param name="ip">The ip to block</param>
         public async Task BlockIP(IPAddress ip) {
-            await _context.BlockedIPs.AddAsync(new BlockedIP() {
+            await _context.BlockedIps.AddAsync(new BlockedIp() {
                 Ip = ip.ToString(),
                 BlockTime = DateTime.Now
             });

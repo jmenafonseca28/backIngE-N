@@ -14,9 +14,9 @@ namespace BackIngE_N.Controllers {
     public class PlayListController : ControllerBase {
 
         private readonly PlayListLogic _playListLogic;
-        private readonly ExportLogic _exportLogic;
+        private readonly ExportImportLogic _exportLogic;
 
-        public PlayListController(PlayListLogic playListLogic, ExportLogic exportLogic) {
+        public PlayListController(PlayListLogic playListLogic, ExportImportLogic exportLogic) {
             _playListLogic = playListLogic;
             _exportLogic = exportLogic;
         }

@@ -1,13 +1,31 @@
-﻿namespace BackIngE_N.BD;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-public partial class PlayList {
+namespace BackIngE_N.BD;
+
+[Table("PlayList")]
+public partial class PlayList
+{
+    [Key]
+    [Column("id")]
     public Guid Id { get; set; }
 
+    [Column("user_id")]
     public Guid UserId { get; set; }
 
-    public string Name { get; set; } = null!;
+    [Column("name")]
+    [StringLength(255)]
+    [Unicode(false)]
+    public string? Name { get; set; }
 
-    public virtual ICollection<ChannelPlayList> ChannelPlayLists { get; set; } = new List<ChannelPlayList>();
-
+    [ForeignKey("UserId")]
+    [InverseProperty("PlayLists")]
     public virtual Userr User { get; set; } = null!;
+
+    [ForeignKey("PlaylistId")]
+    [InverseProperty("Playlists")]
+    public virtual ICollection<Channel> Channels { get; set; } = new List<Channel>();
 }

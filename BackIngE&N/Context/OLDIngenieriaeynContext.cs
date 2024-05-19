@@ -1,8 +1,9 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
+using BackIngE_N.BD;
 using Microsoft.EntityFrameworkCore;
 
-namespace BackIngE_N.BD;
+namespace BackIngE_N.Context;
 
 public partial class IngenieriaeynContext : DbContext {
     public IngenieriaeynContext() {
@@ -59,15 +60,9 @@ public partial class IngenieriaeynContext : DbContext {
         });
 
         modelBuilder.Entity<ChannelPlayList>(entity => {
-            entity.HasKey(e => e.Id).HasName("PK__Channel___3213E83F96E7E537");
-
             entity.ToTable("Channel_PlayList");
 
-            entity.Property(e => e.Id)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("id");
-            entity.Property(e => e.ChannelId).HasColumnName("channel_id");
-            entity.Property(e => e.PlaylistId).HasColumnName("playlist_id");
+            entity.HasKey(e => new { e.ChannelId, e.PlaylistId }).HasName("pk_channel_playlist");
 
             entity.HasOne(d => d.Channel).WithMany(p => p.ChannelPlayLists)
                 .HasForeignKey(d => d.ChannelId)
@@ -79,6 +74,7 @@ public partial class IngenieriaeynContext : DbContext {
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_playlist");
         });
+
 
         modelBuilder.Entity<PlayList>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__PlayList__3213E83F175CA317");
@@ -179,3 +175,4 @@ public partial class IngenieriaeynContext : DbContext {
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+*/

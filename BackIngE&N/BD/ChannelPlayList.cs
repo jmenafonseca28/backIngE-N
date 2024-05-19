@@ -2,9 +2,7 @@
 
 namespace BackIngE_N.BD;
 
-public partial class ChannelPlayList
-{
-    public Guid Id { get; set; }
+public partial class ChannelPlayList {
 
     public Guid ChannelId { get; set; }
 

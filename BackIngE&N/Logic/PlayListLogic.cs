@@ -1,5 +1,6 @@
 ﻿using BackIngE_N.BD;
 using BackIngE_N.Config.Messages.PlayList;
+using BackIngE_N.Context;
 using BackIngE_N.DTO.PlayList;
 using BackIngE_N.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,7 @@ namespace BackIngE_N.Logic {
 
         public async Task<Response> GetPlayList(Guid id) {
             //TODO: falta verificar que la playlist sea del usuario que envía el token
-            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.ChannelPlayLists)
-                .ThenInclude(p => p.Channel).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
-
+            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
             return new Response(PlayListSuccess.PLAYLISTGET, true, p);
         }
 
@@ -30,7 +29,7 @@ namespace BackIngE_N.Logic {
             foreach (PlayList pl in p) {
                 PlayListDTO playListDTO = new() {
                     Id = pl.Id,
-                    Name = pl.Name,
+                    Name = pl.Name ?? "",
                     UserId = pl.UserId,
                 };
                 playList.Add(playListDTO);
