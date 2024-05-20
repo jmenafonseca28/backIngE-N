@@ -1,11 +1,11 @@
 ﻿namespace BackIngE_N.Config.Messages.PlayList {
     public static class PlayListSuccess {
 
-        public static string PLAYLISTCREATED = "PlayList creada con exito";
-        public static string PLAYLISTUPDATED = "PlayList actualizada con exito";
-        public static string PLAYLISTDELETED = "PlayList eliminada con exito";
-        public static string PLAYLISTGET = "PlayList obtenida con exito";
-        public static string PLAYLISTEXPORTED = "PlayList exportada con exito";
+        public static string PLAYLIST_CREATED = "PlayList creada con exito";
+        public static string PLAYLIST_UPDATED = "PlayList actualizada con exito";
+        public static string PLAYLIST_DELETED = "PlayList eliminada con exito";
+        public static string PLAYLIST_GET = "PlayList obtenida con exito";
+        public static string PLAYLIST_EXPORTED = "PlayList exportada con exito";
 
     }
 }

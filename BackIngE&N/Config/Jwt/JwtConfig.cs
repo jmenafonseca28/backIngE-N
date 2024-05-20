@@ -1,14 +1,15 @@
-﻿using BackIngE_N.BD;
-using BackIngE_N.Config.Messages;
-using BackIngE_N.DTO.UserrDto;
+﻿using BackIngE_N.Config.Messages;
 using BackIngE_N.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BackIngE_N.Config.Messages.User;
+using BackIngE_N.Models.DTO.UserrDto;
+using BackIngE_N.Models.BD;
 
-namespace BackIngE_N.Config.Jwt {
+namespace BackIngE_N.Config.Jwt
+{
     public class JwtConfig {
 
         public IConfiguration _config;
@@ -26,7 +27,7 @@ namespace BackIngE_N.Config.Jwt {
         /// <returns>A response object with the token if the credentials are correct</returns>
         public Response generateToken(UserBase user, Userr u) {
 
-            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrSuccess.LOGINSUCCESS, true, u.Token);
+            if (u.Token != null && ValidateToken(u.Token)) return new Response(UserrSuccess.LOGIN_SUCCESS, true, u.Token);
 
             Jwt jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 
@@ -52,7 +53,7 @@ namespace BackIngE_N.Config.Jwt {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new Response(GeneralMessages.TOKENGENERATED, true, tokenHandler.WriteToken(tokenConfig));
+            return new Response(GeneralMessages.TOKEN_GENERATED, true, tokenHandler.WriteToken(tokenConfig));
 
         }
 

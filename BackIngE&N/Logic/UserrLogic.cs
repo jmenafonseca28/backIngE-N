@@ -1,17 +1,15 @@
-﻿using BackIngE_N.BD;
-using BackIngE_N.Config.Jwt;
+﻿using BackIngE_N.Config.Jwt;
 using BackIngE_N.Config.Messages;
-using BackIngE_N.DTO.UserrDto;
 using Microsoft.EntityFrameworkCore;
 using BackIngE_N.Models;
 using _bCrypt = BCrypt.Net.BCrypt;
 using System.Net;
-using Microsoft.Extensions.Options;
 using BackIngE_N.Config.Messages.User;
 using BackIngE_N.Context;
+using BackIngE_N.Models.DTO.UserrDto;
+using BackIngE_N.Models.BD;
 
-namespace BackIngE_N.Logic
-{
+namespace BackIngE_N.Logic {
     public class UserrLogic {
 
         private readonly IngenieriaeynContext _context;
@@ -32,23 +30,23 @@ namespace BackIngE_N.Logic
         public async Task<Response> Login(UserBase user, IPAddress? ip) {
 
             if (ip != null) {
-                if (await _securityLogic.isBlockedIP(ip)) throw new Exception(UserrError.IPBLOCKED);
+                if (await _securityLogic.isBlockedIP(ip)) throw new Exception(UserrError.IP_BLOCKED);
                 await _securityLogic.ValidateIP(ip);
             }
 
-            Userr u = await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USERNOTFOUND);
+            Userr u = await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USER_NOT_FOUND);
 
             if (user == null || !_bCrypt.Verify(user.Password, u.Password)) {
                 if (ip != null) await _securityLogic.SaveIP(ip, false);
-                throw new Exception(UserrError.LOGINERROR);
+                throw new Exception(UserrError.LOGIN_ERROR);
             };
 
-            if (ip != null)  await _securityLogic.SaveIP(ip, true);
+            if (ip != null) await _securityLogic.SaveIP(ip, true);
 
             Response r = _jwtConfig.generateToken(user, u);
 
-            if (r.Success && r.Message.Equals(GeneralMessages.TOKENGENERATED)) {
-                await UpdateToken(user.Email, (string)r.Data);
+            if (r.Success && r.Message.Equals(GeneralMessages.TOKEN_GENERATED)) {
+                if (r.Data != null) await UpdateToken(user.Email, (string)r.Data);
             }
 
             return new Response(r.Message, r.Success,
@@ -65,7 +63,7 @@ namespace BackIngE_N.Logic
         /// <returns>A task representing the asynchronous operation. The task result contains a boolean indicating whether the token update was successful.</returns>
         private async Task<bool> UpdateToken(string email, string token) {
 
-            Userr u = await _context.Userrs.Where(u => u.Email == email).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USERNOTFOUND);
+            Userr u = await _context.Userrs.Where(u => u.Email == email).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USER_NOT_FOUND);
 
             u.Token = token;
 
@@ -82,20 +80,20 @@ namespace BackIngE_N.Logic
         /// <returns>A <see cref="Task{Response}"/> representing the asynchronous operation. The task result contains a <see cref="Response"/> object indicating the success or failure of the registration.</returns>
         public async Task<Response> Register(UserDTO user) {
 
-            if (await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() != null) throw new Exception(UserrError.USERALREDYEXIST);
+            if (await _context.Userrs.Where(u => u.Email == user.Email).FirstOrDefaultAsync() != null) throw new Exception(UserrError.USER_ALREDY_EXIST);
 
             Userr u = new() {
                 Name = user.Name,
                 LastName = user.LastName,
                 Email = user.Email,
                 Password = _bCrypt.HashPassword(user.Password),
-                Role = "User",
+                Role = "user",
                 Token = null
             };
 
             _context.Userrs.Add(u);
 
-            return await _context.SaveChangesAsync() > 0 ? new Response(UserrSuccess.USERCREATED, true) : new Response(UserrError.USERNOTCREATED, false);
+            return await _context.SaveChangesAsync() > 0 ? new Response(UserrSuccess.USER_CREATED, true) : new Response(UserrError.USER_NOT_CREATED, false);
 
         }
     }

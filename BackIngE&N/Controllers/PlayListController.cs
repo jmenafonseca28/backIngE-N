@@ -1,13 +1,14 @@
 ﻿using BackIngE_N.Config.Messages;
 using BackIngE_N.Config.Messages.PlayList;
-using BackIngE_N.DTO.PlayList;
 using BackIngE_N.Logic;
 using BackIngE_N.Models;
+using BackIngE_N.Models.DTO.PlayList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BackIngE_N.Controllers {
+namespace BackIngE_N.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -57,7 +58,7 @@ namespace BackIngE_N.Controllers {
         public async Task<Response> DeletePlayList(Guid id) {
             try {
                 await _playListLogic.DeletePlayList(id);
-                return new Response(PlayListSuccess.PLAYLISTDELETED, true);
+                return new Response(PlayListSuccess.PLAYLIST_DELETED, true);
             } catch (Exception e) {
                 return new Response(GeneralMessages.ERROR, false, e.Message);
             }

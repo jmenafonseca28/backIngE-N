@@ -1,8 +1,8 @@
 ﻿using BackIngE_N.Config.Jwt;
 using BackIngE_N.Config.Messages;
-using BackIngE_N.DTO.UserrDto;
 using BackIngE_N.Logic;
 using BackIngE_N.Models;
+using BackIngE_N.Models.DTO.UserrDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;

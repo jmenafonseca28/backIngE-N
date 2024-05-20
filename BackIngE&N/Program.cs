@@ -30,10 +30,15 @@ builder.Services.AddCors(options => {
                .AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader());
+    options.AddPolicy("AllowIonic",
+               builder => builder
+               .WithOrigins("http://localhost:8101", "http://localhost:8100")
+               .WithMethods("GET", "POST", "PUT", "DELETE")
+               .AllowAnyHeader());
 });
 
 var key = builder.Configuration.GetValue<string>("Jwt:Key");
-var keyBytes = Encoding.UTF8.GetBytes(key);
+var keyBytes = Encoding.UTF8.GetBytes(key ?? "");
 
 builder.Services.AddAuthentication(config => {
     config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -63,7 +68,7 @@ if (app.Environment.IsDevelopment()) {
 }
 
 //app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseCors("AllowIonic");
 
 app.UseAuthentication();
 

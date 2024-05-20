@@ -3,10 +3,10 @@
     public static class UserrSuccess
     {
 
-        public const string USERCREATED = "Usuario creado";
-        public const string USERUPDATED = "Usuario actualizado";
-        public const string USERDELETED = "Usuario eliminado";
-        public const string LOGINSUCCESS = "Usuario al iniciar";
+        public const string USER_CREATED = "Usuario creado";
+        public const string USER_UPDATED = "Usuario actualizado";
+        public const string USER_DELETED = "Usuario eliminado";
+        public const string LOGIN_SUCCESS = "Usuario al iniciar";
 
     }
 }

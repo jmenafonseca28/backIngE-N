@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BackIngE_N.BD;
+using BackIngE_N.Models.BD;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackIngE_N.Context;
@@ -28,39 +28,76 @@ public partial class IngenieriaeynContext : DbContext {
         modelBuilder.Entity<BlockedIp>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__BlockedI__3213E83F4711E8FB");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.ToTable("BlockedIP");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.BlockTime)
+                .HasColumnType("datetime")
+                .HasColumnName("block_time");
+            entity.Property(e => e.Ip)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ip");
         });
 
         modelBuilder.Entity<Channel>(entity => {
-            entity.HasKey(e => e.Id).HasName("PK__Channel__3213E83FF5D86981");
+            entity.HasKey(e => e.Id).HasName("PK__Channel__3213E83F8A6ECE67");
+            entity.ToTable("Channel");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.Logo)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("logo");
+            entity.Property(e => e.PlaylistId).HasColumnName("playlist_id");
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("title");
+            entity.Property(e => e.TvgChannelNumber).HasColumnName("tvg_channel_number");
+            entity.Property(e => e.TvgId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("tvg_id");
+            entity.Property(e => e.TvgName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("tvg_name");
+            entity.Property(e => e.Url)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("url");
+            entity.Property(e => e.GroupTitle)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("group_title");
 
-            entity.HasMany(d => d.Playlists).WithMany(p => p.Channels)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ChannelPlayList",
-                    r => r.HasOne<PlayList>().WithMany()
-                        .HasForeignKey("PlaylistId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_playlist"),
-                    l => l.HasOne<Channel>().WithMany()
-                        .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_channel"),
-                    j => {
-                        j.HasKey("ChannelId", "PlaylistId").HasName("pk_channel_playlist");
-                        j.ToTable("Channel_PlayList");
-                        j.IndexerProperty<Guid>("ChannelId").HasColumnName("channel_id");
-                        j.IndexerProperty<Guid>("PlaylistId").HasColumnName("playlist_id");
-                    });
+            entity.HasOne(d => d.Playlist).WithMany(p => p.Channels)
+                .HasForeignKey(d => d.PlaylistId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_playlist");
         });
 
         modelBuilder.Entity<PlayList>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__PlayList__3213E83F175CA317");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.ToTable("PlayList");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.PlayLists)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_user");
         });
@@ -68,13 +105,55 @@ public partial class IngenieriaeynContext : DbContext {
         modelBuilder.Entity<Security>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__Security__3213E83F930700BE");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.ToTable("Security");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.Ip)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("ip");
+            entity.Property(e => e.LoginTime)
+                .HasColumnType("datetime")
+                .HasColumnName("login_time");
+            entity.Property(e => e.StatusLogin).HasColumnName("status_login");
         });
 
         modelBuilder.Entity<Userr>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__Userr__3213E83F8F800657");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.ToTable("Userr");
+
+            entity.HasIndex(e => e.Email, "UQ_Userr_Email").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("id");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("last_name");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Password)
+                .HasMaxLength(512)
+                .IsUnicode(false)
+                .HasColumnName("password");
+            entity.Property(e => e.Role)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("role");
+            entity.Property(e => e.Token)
+                .HasMaxLength(512)
+                .IsUnicode(false)
+                .HasColumnName("token");
         });
 
         OnModelCreatingPartial(modelBuilder);

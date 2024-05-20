@@ -1,7 +1,6 @@
-﻿using BackIngE_N.BD;
-using BackIngE_N.Config.Messages.PlayList;
+﻿using BackIngE_N.Config.Messages.PlayList;
 using BackIngE_N.Context;
-using BackIngE_N.Models;
+using BackIngE_N.Models.BD;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
@@ -18,12 +17,12 @@ namespace BackIngE_N.Logic {
 
         public async Task<IActionResult> ExportPlayList(Guid id) {
             StringBuilder sb = new StringBuilder();
-            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLISTNOTFOUND);
+            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
 
             sb.Append("#EXTM3U\n");
 
             foreach (Channel cp in p.Channels) {
-                sb.Append("#EXTINF: -1 tvg-id=\"" + cp.TvgId + "\" tvg-chno=\"" + cp.TvgChannelNumber + "\" tvg-logo=\"" + cp.Logo + "\" group-title=\"General\", " + cp.Title + "\n");
+                sb.Append("#EXTINF: -1 tvg-id=\"" + cp.TvgId + "\" tvg-chno=\"" + cp.TvgChannelNumber + "\" tvg-logo=\"" + cp.Logo + "\" group-title=\"" + cp.GroupTitle + "\", " + cp.Title + "\n");
                 sb.Append(cp.Url + "\n");
             }
 

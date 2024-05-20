@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets or sets the data associated with the response.
         /// </summary>
-        public Object Data { get; set; }
+        public Object? Data { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class with the specified message, success status, and data.

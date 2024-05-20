@@ -1,5 +1,7 @@
-﻿namespace BackIngE_N.DTO.UserrDto {
-    public class UserResponse {
+﻿namespace BackIngE_N.Models.DTO.UserrDto
+{
+    public class UserResponse
+    {
 
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
@@ -9,7 +11,8 @@
         public string? Token { get; set; }
         public string Role { get; set; } = null!;
 
-        public UserResponse(Guid id, string name, string lastName, string email, string role, string? token) {
+        public UserResponse(Guid id, string name, string lastName, string email, string role, string? token)
+        {
             Id = id;
             Name = name;
             LastName = lastName;

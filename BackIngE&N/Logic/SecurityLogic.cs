@@ -1,5 +1,5 @@
-﻿using BackIngE_N.BD;
-using BackIngE_N.Context;
+﻿using BackIngE_N.Context;
+using BackIngE_N.Models.BD;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -61,11 +61,11 @@ namespace BackIngE_N.Logic
 
             if (ip == null) return;
 
-            var threshold = 1; // Número de intentos fallidos necesarios para bloquear la IP
-            var blockDurationMinutes = 5; // Duración del bloqueo en minutos
-            var blockStartTime = DateTime.Now.AddMinutes(-blockDurationMinutes);
+            int threshold = 1; // Número de intentos fallidos necesarios para bloquear la IP
+            int blockDurationMinutes = 5; // Duración del bloqueo en minutos
+            DateTime blockStartTime = DateTime.Now.AddMinutes(-blockDurationMinutes);
 
-            var count = await _context.Securities
+            int count = await _context.Securities
                 .Where(s => s.Ip == ip.ToString() && s.LoginTime > blockStartTime && s.StatusLogin == false)
                 .CountAsync();
 
