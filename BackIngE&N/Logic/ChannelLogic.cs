@@ -23,6 +23,7 @@ namespace BackIngE_N.Logic {
                 TvgId = channel.TvgId,
                 TvgChannelNumber = channel.TvgChannelNumber,
                 PlaylistId = channel.PlayListId,
+                orderList = channel.orderList
             };
 
             var r = await _context.Channels.AddAsync(c);
