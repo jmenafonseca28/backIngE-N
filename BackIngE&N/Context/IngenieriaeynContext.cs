@@ -75,6 +75,8 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("group_title");
+            entity.Property(e => e.orderList)
+                .HasColumnName("order_list");
 
             entity.HasOne(d => d.Playlist).WithMany(p => p.Channels)
                 .HasForeignKey(d => d.PlaylistId)

@@ -20,7 +20,7 @@ public partial class Channel
 
     public string? Logo { get; set; }
     public string? GroupTitle { get; set; }
-
+    public int? orderList { get; set; }
     public Guid PlaylistId { get; set; }
 
     [JsonIgnore]
