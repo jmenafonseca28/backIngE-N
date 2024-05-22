@@ -52,6 +52,7 @@ namespace BackIngE_N.Logic {
             c.TvgId = channel.TvgId;
             c.TvgChannelNumber = channel.TvgChannelNumber;
             c.PlaylistId = channel.PlayListId;
+            c.orderList = channel.orderList;
 
             if (await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
 
