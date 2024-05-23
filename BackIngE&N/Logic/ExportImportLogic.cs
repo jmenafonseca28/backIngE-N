@@ -17,11 +17,11 @@ namespace BackIngE_N.Logic {
 
         public async Task<IActionResult> ExportPlayList(Guid id) {
             StringBuilder sb = new StringBuilder();
-            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
+            List<Channel> channels = await _context.Channels.Where(c => c.PlaylistId == id && c.State == true).ToListAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
 
             sb.Append("#EXTM3U\n");
 
-            foreach (Channel cp in p.Channels) {
+            foreach (Channel cp in channels) {
                 sb.Append("#EXTINF: -1 tvg-id=\"" + cp.TvgId + "\" tvg-chno=\"" + cp.TvgChannelNumber + "\" tvg-logo=\"" + cp.Logo + "\" group-title=\"" + cp.GroupTitle + "\", " + cp.Title + "\n");
                 sb.Append(cp.Url + "\n");
             }

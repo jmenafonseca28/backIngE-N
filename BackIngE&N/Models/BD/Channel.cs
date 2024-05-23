@@ -19,8 +19,13 @@ public partial class Channel
     public int? TvgChannelNumber { get; set; }
 
     public string? Logo { get; set; }
+
     public string? GroupTitle { get; set; }
-    public int? orderList { get; set; }
+
+    public int? OrderList { get; set; }
+
+    public bool State { get; set; }
+
     public Guid PlaylistId { get; set; }
 
     [JsonIgnore]

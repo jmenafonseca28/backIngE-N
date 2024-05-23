@@ -17,7 +17,7 @@ namespace BackIngE_N.Logic
 
         public async Task<Response> GetPlayList(Guid id) {
             //TODO: falta verificar que la playlist sea del usuario que envía el token
-            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
+            PlayList p = await _context.PlayLists.Where(p => p.Id == id).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
             return new Response(PlayListSuccess.PLAYLIST_GET, true, p);
         }
 

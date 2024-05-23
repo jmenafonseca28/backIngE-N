@@ -44,7 +44,7 @@ public partial class IngenieriaeynContext : DbContext {
 
         modelBuilder.Entity<Channel>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__Channel__3213E83F8A6ECE67");
-            entity.ToTable("Channel");
+            entity.ToTable("Channel", tb => tb.UseSqlOutputClause(false));
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("(newid())")
@@ -75,8 +75,9 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("group_title");
-            entity.Property(e => e.orderList)
-                .HasColumnName("order_list");
+            entity.Property(e => e.OrderList).HasColumnName("order_list");
+
+            entity.Property(e => e.State).HasColumnName("state");
 
             entity.HasOne(d => d.Playlist).WithMany(p => p.Channels)
                 .HasForeignKey(d => d.PlaylistId)

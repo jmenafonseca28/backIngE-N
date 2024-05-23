@@ -16,6 +16,36 @@ namespace BackIngE_N.Controllers {
             _channelLogic = channelLogic;
         }
 
+        [HttpGet]
+        [Route("GetChannelsByPlaylist/{idPlaylist}")]
+        public async Task<Response> GetChannelsByPlaylist(Guid idPlaylist) {
+            try {
+                return await _channelLogic.GetChannelsByPlaylist(idPlaylist);
+            } catch (Exception e) {
+                return new Response(ChannelError.CHANNEL_NOT_FOUND, false, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("FunctionalChannels/{idPlaylist}")]
+        public async Task<Response> FunctionalChannels(Guid idPlaylist) {
+            try {
+                return await _channelLogic.FunctionalChannels(idPlaylist);
+            } catch (Exception e) {
+                return new Response(ChannelError.CHANNEL_NOT_FOUND, false, e.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("ToggleOrder/{idChannel}/{newOrder}")]
+        public async Task<Response> ToggleOrder(Guid idChannel, int newOrder) {
+            try {
+                return await _channelLogic.ToggleOrder(idChannel, newOrder);
+            } catch (Exception e) {
+                return new Response(ChannelError.CHANNEL_NOT_UPDATED, false, e.Message);
+            }
+        }
+
         [HttpPost]
         [Route("CreateChannel")]
         public async Task<Response> CreateChannel(ChannelDTO channel) {

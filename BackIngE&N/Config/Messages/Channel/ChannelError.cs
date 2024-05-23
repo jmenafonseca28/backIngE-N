@@ -1,6 +1,7 @@
 ﻿namespace BackIngE_N.Config.Messages.Channel {
     public static class ChannelError {
-        
+
+        public const string CHANNELS_NOT_FOUND = "Canales no encontrados";
         public const string CHANNEL_NOT_FOUND = "Canal no encontrado";
         public const string CHANNEL_ALREADY_EXISTS = "El canal ya existe";
         public const string CHANNEL_NOT_CREATED = "El canal no se pudo crear";
