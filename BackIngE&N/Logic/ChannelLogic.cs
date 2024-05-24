@@ -31,7 +31,7 @@ namespace BackIngE_N.Logic {
                 .Where(c => c.PlaylistId == idPlaylist && c.State == true).ToListAsync()
                 ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
 
-            foreach (Channel ch in channels) {
+            /*foreach (Channel ch in channels) {
                 try {
                     HttpResponseMessage response = await _httpClient.GetAsync(ch.Url);
                     if (!response.IsSuccessStatusCode && ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)) {
@@ -39,7 +39,7 @@ namespace BackIngE_N.Logic {
                     }
                 } catch (Exception) { }
 
-            }
+            }*/
             return new Response(ChannelSuccess.CHANNELS_FUNCTIONAL, true);
         }
 
