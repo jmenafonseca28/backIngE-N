@@ -4,8 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace BackIngE_N.Models.BD;
 
-public partial class Channel
-{
+public partial class Channel {
     public Guid Id { get; set; }
 
     public string Title { get; set; } = null!;
@@ -26,8 +25,6 @@ public partial class Channel
 
     public bool State { get; set; }
 
-    public Guid PlaylistId { get; set; }
-
     [JsonIgnore]
-    public virtual PlayList Playlist { get; set; } = null!;
+    public virtual ICollection<PlayList> Playlists { get; set; } = new List<PlayList>();
 }

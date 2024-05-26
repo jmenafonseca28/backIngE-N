@@ -32,7 +32,7 @@ namespace BackIngE_N.Config.Jwt
             Jwt jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 
             var claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
+                new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim("email", user.Email.ToString()),
@@ -40,7 +40,7 @@ namespace BackIngE_N.Config.Jwt
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key ?? ""));
 
             var singIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
@@ -69,7 +69,7 @@ namespace BackIngE_N.Config.Jwt
             var jwt = _config.GetSection("JWT").Get<Jwt>() ?? throw new Exception(GeneralMessages.ERROR);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(jwt.Key);
+            var key = Encoding.UTF8.GetBytes(jwt.Key ?? "");
             try {
                 var validationParameters = new TokenValidationParameters {
                     ValidateIssuerSigningKey = true,

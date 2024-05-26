@@ -1,4 +1,5 @@
-﻿using BackIngE_N.Config.Messages.PlayList;
+﻿using BackIngE_N.Config.Messages.Channel;
+using BackIngE_N.Config.Messages.PlayList;
 using BackIngE_N.Context;
 using BackIngE_N.Models.BD;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,8 @@ namespace BackIngE_N.Logic {
 
         public async Task<IActionResult> ExportPlayList(Guid id) {
             StringBuilder sb = new StringBuilder();
-            List<Channel> channels = await _context.Channels.Where(c => c.PlaylistId == id && c.State == true).ToListAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
+            PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
+            List<Channel> channels = p.Channels.Where(c => c.State == true).ToList() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
 
             sb.Append("#EXTM3U\n");
 

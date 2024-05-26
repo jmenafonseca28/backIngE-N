@@ -2,16 +2,14 @@
 CREATE TABLE Channel (
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
     title VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL UNIQUE,
     tvg_id VARCHAR(255) NULL,
     tvg_name VARCHAR(255) NULL,
     tvg_channel_number int NULL,
     logo VARCHAR(255) NULL,
     group_title VARCHAR(255) NULL,
-    order_list int NULL,
-    state bit NOT NULL DEFAULT 1,
-    playlist_id uniqueidentifier NOT NULL
-    CONSTRAINT fk_playlist FOREIGN KEY (playlist_id) REFERENCES PlayList(id)
+    order_list int not NULL DEFAULT 0,
+    state bit NOT NULL DEFAULT 1
 );
 
 
@@ -32,16 +30,13 @@ CREATE TABLE PlayList (
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Userr(id)
 );
 
---CREATE TABLE Channel_PlayList (
-   -- channel_id uniqueidentifier NOT NULL,
-   -- playlist_id uniqueidentifier NOT NULL,
-    --CONSTRAINT pk_channel_playlist PRIMARY KEY (channel_id, playlist_id),
-    --CONSTRAINT fk_channel FOREIGN KEY (channel_id) REFERENCES Channel(id),
-    --CONSTRAINT fk_playlist FOREIGN KEY (playlist_id) REFERENCES PlayList(id)
---);
-
-
-
+CREATE TABLE Channel_PlayList (
+    channel_id uniqueidentifier NOT NULL,
+    playlist_id uniqueidentifier NOT NULL,
+    CONSTRAINT pk_channel_playlist PRIMARY KEY (channel_id, playlist_id),
+    CONSTRAINT fk_channel FOREIGN KEY (channel_id) REFERENCES Channel(id) on delete cascade,
+    CONSTRAINT fk_playlist FOREIGN KEY (playlist_id) REFERENCES PlayList(id) on delete cascade
+);
 
 CREATE TABLE Security(
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
@@ -101,19 +96,24 @@ UPDATE Channel set order_list = 5 where id = '9635ed56-a9bf-412e-aab6-e1b17dbd49
 UPDATE Channel set order_list = 6 where id = 'a3dc95d1-e65f-4233-9006-ddfd1d25f902';--Canal 2
 
 
-INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title, playlist_id) 
-VALUES ('Canal 1 CR (720p)', 'https://59ef525c24caa.streamlock.net/canal1cr/canal1cr/playlist.m3u8', 'Canal1.cr', NULL, 1, 'https://i.ibb.co/KhNS8Dy/cropped-logoo-1.png', 'General', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title) 
+VALUES ('Canal 1 CR (720p)', 'https://59ef525c24caa.streamlock.net/canal1cr/canal1cr/playlist.m3u8', 'Canal1.cr', NULL, 1, 'https://i.ibb.co/KhNS8Dy/cropped-logoo-1.png', 'General');
 
-INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title, playlist_id) 
-VALUES ('Canal 2 CR (576p)', 'https://alba-cr-repretel-c2.stream.mediatiquestream.com/index.m3u8', 'Canal2.cr', 'Canal2.cr', 2, 'https://i.imgur.com/Nn8BtH5.png', 'General', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title) 
+VALUES ('Canal 2 CR (576p)', 'https://alba-cr-repretel-c2.stream.mediatiquestream.com/index.m3u8', 'Canal2.cr', 'Canal2.cr', 2, 'https://i.imgur.com/Nn8BtH5.png', 'General');
 
-INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title, playlist_id) 
-VALUES ('Canal 4 CR (720p)', 'https://alba-cr-repretel-c4.stream.mediatiquestream.com/index.m3u8', 'Canal4.cr', NULL, 4, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Repretel_4_logo.png/150px-Repretel_4_logo.png', 'General', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title) 
+VALUES ('Canal 4 CR (720p)', 'https://alba-cr-repretel-c4.stream.mediatiquestream.com/index.m3u8', 'Canal4.cr', NULL, 4, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Repretel_4_logo.png/150px-Repretel_4_logo.png', 'General');
 
-INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title, playlist_id) 
-VALUES ('Canal 6 CR (720p)', 'https://alba-cr-repretel-c6.stream.mediatiquestream.com/tracks-v3a1/mono.m3u8', 'Canal6.cr', NULL, 6, 'https://i.imgur.com/nfKJftW.png', 'General', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title) 
+VALUES ('Canal 6 CR (720p)', 'https://alba-cr-repretel-c6.stream.mediatiquestream.com/tracks-v3a1/mono.m3u8', 'Canal6.cr', NULL, 6, 'https://i.imgur.com/nfKJftW.png', 'General');
 
-INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title, playlist_id)
-VALUES ('Canal 8 CR (720p)', 'https://mdstrm.com/live-stream-playlist/5a7b1e63a8da282c34d65445.m3u8', 'Canal8.cr', NULL, 8, 'https://i.imgur.com/nefPi2Y.png', 'General', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, group_title)
+VALUES ('Canal 8 CR (720p)', 'https://mdstrm.com/live-stream-playlist/5a7b1e63a8da282c34d65445.m3u8', 'Canal8.cr', NULL, 8, 'https://i.imgur.com/nefPi2Y.png', 'General');
 
 
+INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('4a0eeebc-c6b5-4d09-9987-0a4b3ca69b0b', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('ceb09225-309b-48c1-8c9d-362c90c1d8e8', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('ad4db360-be07-498c-9e23-3ecf5eedc026', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('71c82815-c760-4514-8cd5-5e54cf0d5e2b', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('ff5d67cb-1895-4ddc-822f-bb20660ccad3', '951dfa78-f80b-4635-b717-5b5675a4f4a2');

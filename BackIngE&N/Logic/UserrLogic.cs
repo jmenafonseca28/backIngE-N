@@ -9,7 +9,8 @@ using BackIngE_N.Context;
 using BackIngE_N.Models.DTO.UserrDto;
 using BackIngE_N.Models.BD;
 
-namespace BackIngE_N.Logic {
+namespace BackIngE_N.Logic
+{
     public class UserrLogic {
 
         private readonly IngenieriaeynContext _context;
