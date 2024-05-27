@@ -1,4 +1,5 @@
-﻿using BackIngE_N.Config.Messages.Channel;
+﻿using BackIngE_N.Config.Messages;
+using BackIngE_N.Config.Messages.Channel;
 using BackIngE_N.Logic;
 using BackIngE_N.Models;
 using BackIngE_N.Models.DTO.Channel;
@@ -12,9 +13,11 @@ namespace BackIngE_N.Controllers {
     public class ChannelController : ControllerBase {
 
         private readonly ChannelLogic _channelLogic;
+        private readonly ExportImportLogic _exportLogic;
 
-        public ChannelController(ChannelLogic channelLogic) {
+        public ChannelController(ChannelLogic channelLogic, ExportImportLogic exportLogic) {
             _channelLogic = channelLogic;
+            _exportLogic = exportLogic;
         }
 
         [HttpGet]
@@ -86,6 +89,16 @@ namespace BackIngE_N.Controllers {
                 return await _channelLogic.GetChannel(idChannel);
             } catch (Exception e) {
                 return new Response(ChannelError.CHANNEL_NOT_FOUND, false, e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("ImportChannels/{playListId}")]
+        public async Task<Response> ImportChannels([FromForm] IFormFile file, string playListId) {
+            try {
+                return await _exportLogic.ImportPlayList(file, playListId);
+            } catch (Exception e) {
+                return new Response(GeneralMessages.ERROR, false, e.Message);
             }
         }
 

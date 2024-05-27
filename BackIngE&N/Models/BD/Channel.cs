@@ -21,9 +21,9 @@ public partial class Channel {
 
     public string? GroupTitle { get; set; }
 
-    public int? OrderList { get; set; }
+    public int OrderList { get; set; }
 
-    public bool State { get; set; }
+    public bool State { get; set; } = true;
 
     [JsonIgnore]
     public virtual ICollection<PlayList> Playlists { get; set; } = new List<PlayList>();

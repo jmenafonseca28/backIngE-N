@@ -37,40 +37,49 @@ namespace BackIngE_N.Logic {
 
         }
 
-        public async Task<Response> ImportPlayList(IFormFile file) {
+        public async Task<Response> ImportPlayList(IFormFile file, string playListId) {
 
-            using (var reader = new StreamReader(file.OpenReadStream())) {
-                string line;
-                PlayList p = new();
-                List<Channel> channels = [];
-                while ((line = reader.ReadLine()) != null) {
+            using var reader = new StreamReader(file.OpenReadStream());
+            string line;
+            PlayList p = _context.PlayLists.Find(Guid.Parse(playListId)) ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
+            List<Channel> unFunctionalChannels = [];
+            while ((line = reader.ReadLine()) != null) {
 
-                    if (line.Contains("#EXTINF:")) {
+                if (line.Contains("#EXTINF:")) {
 
-                        string tvgNumber = line.Split("tvg-chno=\"")[1].Split("\"")[0] ?? "";
+                    string tvgNumber = line.Contains("tvg-chno") ? line.Split("tvg-chno=\"")[1].Split("\"")[0] : null;
 
-                        _ = int.TryParse(tvgNumber, out int tvgChannelNumber);
+                    _ = int.TryParse(tvgNumber, out int tvgChannelNumber);
 
-                        Channel c = new() {
-                            TvgId = line.Split("tvg-id=\"")[1].Split("\"")[0] ?? "",
-                            TvgChannelNumber = tvgChannelNumber,
-                            Logo = line.Split("tvg-logo=\"")[1].Split("\"")[0] ?? "",
-                            GroupTitle = line.Split("group-title=\"")[1].Split("\"")[0] ?? "",
-                            Title = line.Split(",")[1].Trim(),
-                            Url = reader.ReadLine() ?? ""
-                        };
+                    Channel ch = new() {
+                        TvgId = line.Contains("tvg-id") ? line.Split("tvg-id=\"")[1].Split("\"")[0] : "",
+                        TvgChannelNumber = tvgChannelNumber,
+                        Logo = line.Contains("tvg-logo") ? line.Split("tvg-logo=\"")[1].Split("\"")[0] : null,
+                        GroupTitle = line.Contains("group-title") ? line.Split("group-title=\"")[1].Split("\"")[0] : null,
+                        Title = line.Split(",")[1].Trim() ?? "",
+                        Url = reader.ReadLine() ?? "",
+                        State = true,
+                        OrderList = 0
+                    };
 
-                        if (c.Url == "" || c.Title == "") continue;
+                    if (ch.Title == "") ch.Title = ch.TvgId;
 
-                        channels.Add(c);
+                    if (ch.Url == "" || ch.Title == "") {
+                        unFunctionalChannels.Add(ch);
+                        continue;
+                    }
+
+                    if (_context.Channels.All(c => c.Url != ch.Url)) {
+                        p.Channels.Add(ch);
+                    } else {
+                        Channel chn = await _context.Channels.Where(c => c.Url == ch.Url).FirstOrDefaultAsync();
+                        if (chn != null) p.Channels.Add(chn);
+                        unFunctionalChannels.Add(ch);
                     }
                 }
-                p.Channels = channels;
-                await _context.PlayLists.AddAsync(p);
-                await _context.SaveChangesAsync();
-                return new Response(PlayListSuccess.PLAYLIST_CREATED, true);
             }
-
+            await _context.SaveChangesAsync();
+            return new Response(PlayListSuccess.PLAYLIST_CREATED, true, unFunctionalChannels);
         }
     }
 }

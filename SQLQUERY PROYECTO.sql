@@ -71,6 +71,7 @@ SELECT * from [BlockedIP];
 select * from Userr;
 SELECT * from PlayList;
 SELECT * from Channel;
+SELECT * from Channel_PlayList;
 
 
 --SELECT * from Channel_PlayList;
