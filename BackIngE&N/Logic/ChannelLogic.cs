@@ -63,14 +63,19 @@ namespace BackIngE_N.Logic {
                 Logo = channel.Logo,
                 TvgId = channel.TvgId,
                 TvgChannelNumber = channel.TvgChannelNumber,
-                OrderList = channel.orderList
+                OrderList = 0,
+                State = true
             };
 
+            if (c.Title == string.Empty || c.Url == string.Empty) throw new Exception(ChannelError.DATA_EMPTY);
+
             EntityEntry<Channel> r = await _context.Channels.AddAsync(c);
-
             c = r.Entity;
-
             if (c == null) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
+
+            PlayList p = _context.PlayLists.Find(channel.PlayListId) ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
+            p.Channels.Add(c);
+
             if (await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
 
             return new Response(ChannelSuccess.CHANNEL_CREATED, true, c);
@@ -92,7 +97,6 @@ namespace BackIngE_N.Logic {
             c.Logo = channel.Logo;
             c.TvgId = channel.TvgId;
             c.TvgChannelNumber = channel.TvgChannelNumber;
-            c.OrderList = channel.orderList;
 
             if (await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_UPDATED);
 

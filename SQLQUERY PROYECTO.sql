@@ -87,6 +87,7 @@ update Userr set password = '$2a$11$NgQEa2JrzozrDn7LNezhbetDDBzY09vOGC0hk7c51PtQ
 
 INSERT INTO PlayList (name, user_id) VALUES ('Lista de prueba', 'd7c35a84-4980-49b8-a66d-5c2fe0df5638');
 
+update Channel set state = 1 where id = 'ae517f77-3a7a-4bd2-8683-bc5b68410ccd';
 
 update Channel set order_list = 1 where id = '163debbd-a1e6-430e-b91b-b415d604b2c5';--Canal 4
 update Channel set order_list = 2 where id = 'dd82aa94-2567-4257-8038-3a2e258092b0';--Canal 11
@@ -112,7 +113,7 @@ INSERT INTO Channel (title, url, tvg_id, tvg_name, tvg_channel_number, logo, gro
 VALUES ('Canal 8 CR (720p)', 'https://mdstrm.com/live-stream-playlist/5a7b1e63a8da282c34d65445.m3u8', 'Canal8.cr', NULL, 8, 'https://i.imgur.com/nefPi2Y.png', 'General');
 
 
-INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('4a0eeebc-c6b5-4d09-9987-0a4b3ca69b0b', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
+INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('638c45ae-fe5e-46e1-b711-21ee1515477d', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
 INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('ceb09225-309b-48c1-8c9d-362c90c1d8e8', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
 INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('ad4db360-be07-498c-9e23-3ecf5eedc026', '951dfa78-f80b-4635-b717-5b5675a4f4a2');
 INSERT INTO Channel_PlayList (channel_id, playlist_id) VALUES ('71c82815-c760-4514-8cd5-5e54cf0d5e2b', '951dfa78-f80b-4635-b717-5b5675a4f4a2');

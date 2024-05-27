@@ -12,7 +12,6 @@ namespace BackIngE_N.Models.DTO.Channel {
         public int? TvgChannelNumber { get; set; }
         public string? Logo { get; set; }
         public Guid PlayListId { get; set; }
-        public int orderList { get; set; }
 
     }
 }

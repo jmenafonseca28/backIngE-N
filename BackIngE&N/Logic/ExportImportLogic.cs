@@ -1,6 +1,7 @@
 ﻿using BackIngE_N.Config.Messages.Channel;
 using BackIngE_N.Config.Messages.PlayList;
 using BackIngE_N.Context;
+using BackIngE_N.Models;
 using BackIngE_N.Models.BD;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace BackIngE_N.Logic {
         }
 
         public async Task<IActionResult> ExportPlayList(Guid id) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             PlayList p = await _context.PlayLists.Where(p => p.Id == id).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
             List<Channel> channels = p.Channels.Where(c => c.State == true).ToList() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
 
@@ -33,6 +34,42 @@ namespace BackIngE_N.Logic {
             return new FileContentResult(content, "application/octet-stream") {
                 FileDownloadName = "playlist.m3u"
             };
+
+        }
+
+        public async Task<Response> ImportPlayList(IFormFile file) {
+
+            using (var reader = new StreamReader(file.OpenReadStream())) {
+                string line;
+                PlayList p = new();
+                List<Channel> channels = [];
+                while ((line = reader.ReadLine()) != null) {
+
+                    if (line.Contains("#EXTINF:")) {
+
+                        string tvgNumber = line.Split("tvg-chno=\"")[1].Split("\"")[0] ?? "";
+
+                        _ = int.TryParse(tvgNumber, out int tvgChannelNumber);
+
+                        Channel c = new() {
+                            TvgId = line.Split("tvg-id=\"")[1].Split("\"")[0] ?? "",
+                            TvgChannelNumber = tvgChannelNumber,
+                            Logo = line.Split("tvg-logo=\"")[1].Split("\"")[0] ?? "",
+                            GroupTitle = line.Split("group-title=\"")[1].Split("\"")[0] ?? "",
+                            Title = line.Split(",")[1].Trim(),
+                            Url = reader.ReadLine() ?? ""
+                        };
+
+                        if (c.Url == "" || c.Title == "") continue;
+
+                        channels.Add(c);
+                    }
+                }
+                p.Channels = channels;
+                await _context.PlayLists.AddAsync(p);
+                await _context.SaveChangesAsync();
+                return new Response(PlayListSuccess.PLAYLIST_CREATED, true);
+            }
 
         }
     }
