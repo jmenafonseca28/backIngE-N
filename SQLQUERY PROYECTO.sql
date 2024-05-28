@@ -73,6 +73,11 @@ SELECT * from PlayList;
 SELECT * from Channel;
 SELECT * from Channel_PlayList;
 
+update Channel set url = 'https://alba-cr-repretel-c6.stream.mediatiquestream.com/480p.m3u8' where id= '71c82815-c760-4514-8cd5-5e54cf0d5e2b'
+
+--delete from Channel where order_list = 0;
+--delete from Channel_PlayList where playlist_id = '48e169f4-61fa-4ef6-8e02-675ee651d507';
+
 
 --SELECT * from Channel_PlayList;
 
