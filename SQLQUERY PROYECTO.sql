@@ -1,16 +1,4 @@
-
-CREATE TABLE Channel (
-    id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
-    title VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NOT NULL UNIQUE,
-    tvg_id VARCHAR(255) NULL,
-    tvg_name VARCHAR(255) NULL,
-    tvg_channel_number int NULL,
-    logo VARCHAR(255) NULL,
-    group_title VARCHAR(255) NULL,
-    order_list int not NULL DEFAULT 0,
-    state bit NOT NULL DEFAULT 1
-);
+use ingenieriaeyn;
 
 
 CREATE TABLE Userr (
@@ -23,6 +11,7 @@ CREATE TABLE Userr (
     role VARCHAR(255) NOT NULL
 );
 
+
 CREATE TABLE PlayList (
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
     name VARCHAR(255) NOT NULL,
@@ -30,13 +19,30 @@ CREATE TABLE PlayList (
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Userr(id)
 );
 
-CREATE TABLE Channel_PlayList (
+CREATE TABLE Channel (
+    id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
+    title VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    tvg_id VARCHAR(255) NULL,
+    tvg_name VARCHAR(255) NULL,
+    tvg_channel_number int NULL,
+    logo VARCHAR(255) NULL,
+    group_title VARCHAR(255) NULL,
+    play_list_id uniqueidentifier NULL,
+    order_list int not NULL DEFAULT 0,
+    state bit NOT NULL DEFAULT 1,
+    CONSTRAINT fk_playlist FOREIGN KEY (play_list_id) REFERENCES PlayList(id) on delete cascade
+);
+
+
+
+/*CREATE TABLE Channel_PlayList (
     channel_id uniqueidentifier NOT NULL,
     playlist_id uniqueidentifier NOT NULL,
-    CONSTRAINT pk_channel_playlist PRIMARY KEY (channel_id, playlist_id),
+   CONSTRAINT pk_channel_playlist PRIMARY KEY (channel_id, playlist_id),
     CONSTRAINT fk_channel FOREIGN KEY (channel_id) REFERENCES Channel(id) on delete cascade,
     CONSTRAINT fk_playlist FOREIGN KEY (playlist_id) REFERENCES PlayList(id) on delete cascade
-);
+);*/
 
 CREATE TABLE Security(
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
@@ -51,7 +57,6 @@ CREATE TABLE BlockedIP(
     block_time DATETIME NULL,
 );
 
---DESCOMENTAR Y CREAR
 /* CREATE TRIGGER TR_DISORDER 
 ON Channel 
 AFTER UPDATE 
@@ -62,9 +67,6 @@ BEGIN
     END;
 END; */
 
-
-
-ALTER TABLE PlayList ADD name VARCHAR(255) NULL;
 
 SELECT * from [Security];
 SELECT * from [BlockedIP];

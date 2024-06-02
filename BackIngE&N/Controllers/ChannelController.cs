@@ -30,7 +30,7 @@ namespace BackIngE_N.Controllers {
             }
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("FunctionalChannels/{idPlaylist}")]
         public async Task<Response> FunctionalChannels(Guid idPlaylist) {
             try {
@@ -38,7 +38,7 @@ namespace BackIngE_N.Controllers {
             } catch (Exception e) {
                 return new Response(ChannelError.CHANNEL_NOT_FOUND, false, e.Message);
             }
-        }
+        }*/
 
         [HttpPatch]
         [Route("ToggleOrder/{idChannel}/{newOrder}")]

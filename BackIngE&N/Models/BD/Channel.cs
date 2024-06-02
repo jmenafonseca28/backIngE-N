@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace BackIngE_N.Models.BD;
 
-public partial class Channel {
+public partial class Channel
+{
     public Guid Id { get; set; }
 
     public string Title { get; set; } = null!;
@@ -21,10 +21,11 @@ public partial class Channel {
 
     public string? GroupTitle { get; set; }
 
+    public Guid? PlayListId { get; set; }
+
     public int OrderList { get; set; }
 
-    public bool State { get; set; } = true;
+    public bool State { get; set; }
 
-    [JsonIgnore]
-    public virtual ICollection<PlayList> Playlists { get; set; } = new List<PlayList>();
+    public virtual PlayList? PlayList { get; set; }
 }

@@ -5,14 +5,19 @@ using System.Text;
 using BackIngE_N.Config.Jwt;
 using BackIngE_N.Logic;
 using BackIngE_N.Context;
+using BackIngE_N.Daemons;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+//Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Registra HttpClient
+builder.Services.AddHttpClient<ChannelLogic>();
+
+//Agrega la inyección de dependencias
 builder.Services.AddScoped<JwtConfig>();
 builder.Services.AddScoped<UserrLogic>();
 builder.Services.AddScoped<SecurityLogic>();
@@ -20,10 +25,11 @@ builder.Services.AddScoped<PlayListLogic>();
 builder.Services.AddScoped<ChannelLogic>();
 builder.Services.AddScoped<ExportImportLogic>();
 
-
+//Agrega el contexto de la base de datos
 builder.Services.AddDbContext<IngenieriaeynContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Agrega la configuración de CORS
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll",
                builder => builder
@@ -37,8 +43,9 @@ builder.Services.AddCors(options => {
                .AllowAnyHeader());
 });
 
-var key = builder.Configuration.GetValue<string>("Jwt:Key");
-var keyBytes = Encoding.UTF8.GetBytes(key ?? "");
+//Agrega la configuración de JWT
+string key = builder.Configuration.GetValue<string>("Jwt:Key");
+byte[] keyBytes = Encoding.UTF8.GetBytes(key ?? "");
 
 builder.Services.AddAuthentication(config => {
     config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,6 +66,9 @@ builder.Services.AddAuthentication(config => {
             ValidAudience = builder.Configuration["Jwt:Audience"]
         };
     });
+
+// Registra el Hosted Service
+builder.Services.AddHostedService<CheckChannelsDaemon>();
 
 var app = builder.Build();
 

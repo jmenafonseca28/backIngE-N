@@ -11,7 +11,7 @@ public partial class PlayList
 
     public string? Name { get; set; }
 
-    public virtual Userr User { get; set; } = null!;
-
     public virtual ICollection<Channel> Channels { get; set; } = new List<Channel>();
+
+    public virtual Userr User { get; set; } = null!;
 }

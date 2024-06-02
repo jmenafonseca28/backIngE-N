@@ -14,9 +14,9 @@ namespace BackIngE_N.Logic {
         private readonly IngenieriaeynContext _context;
         private readonly HttpClient _httpClient;
 
-        public ChannelLogic(IngenieriaeynContext context) {
+        public ChannelLogic(IngenieriaeynContext context, HttpClient httpClient) {
             _context = context;
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
 
         public async Task<Response> GetChannelsByPlaylist(Guid idPlaylist) {
@@ -26,22 +26,35 @@ namespace BackIngE_N.Logic {
             return new Response(ChannelSuccess.CHANNELS_GET, true, channels);
         }
 
-        public async Task<Response> FunctionalChannels(Guid idPlaylist) {
-
-            PlayList p = await _context.PlayLists.Where(c => c.Id == idPlaylist).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
-            List<Channel> channels = p.Channels.Where(c => c.State == true).ToList() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
-
-            /*foreach (Channel ch in channels) {
+        public async Task VerifyChannels() {
+            List<Channel> channels = await _context.Channels.ToListAsync() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
+            /*foreach(Channel ch in channels) {
                 try {
                     HttpResponseMessage response = await _httpClient.GetAsync(ch.Url);
-                    if (!response.IsSuccessStatusCode && ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)) {
+                    if(!response.IsSuccessStatusCode && ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)) {
                         await InactivateChannel(ch.Id);
                     }
-                } catch (Exception) { }
-
+                } catch(Exception) {
+                    // Log or handle the exception
+                }
             }*/
-            return new Response(ChannelSuccess.CHANNELS_FUNCTIONAL, true);
         }
+
+        /* public async Task<Response> FunctionalChannels() {
+
+             List<Channel> channels = await _context.Channels.Where(c => c.State == true).ToListAsync() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
+
+             /*foreach (Channel ch in channels) {
+                 try {
+                     HttpResponseMessage response = await _httpClient.GetAsync(ch.Url);
+                     if (!response.IsSuccessStatusCode && ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)) {
+                         await InactivateChannel(ch.Id);
+                     }
+                 } catch (Exception) { }
+
+             }
+             return new Response(ChannelSuccess.CHANNELS_FUNCTIONAL, true);
+         }*/
 
         public async Task<bool> InactivateChannel(Guid idChannel) {
             Channel c = await _context.Channels.FindAsync(idChannel) ?? throw new Exception(ChannelError.CHANNEL_NOT_FOUND);
@@ -67,16 +80,16 @@ namespace BackIngE_N.Logic {
                 State = true
             };
 
-            if (c.Title == string.Empty || c.Url == string.Empty) throw new Exception(ChannelError.DATA_EMPTY);
+            if(c.Title == string.Empty || c.Url == string.Empty) throw new Exception(ChannelError.DATA_EMPTY);
 
             EntityEntry<Channel> r = await _context.Channels.AddAsync(c);
             c = r.Entity;
-            if (c == null) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
+            if(c == null) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
 
             PlayList p = _context.PlayLists.Find(channel.PlayListId) ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
             p.Channels.Add(c);
 
-            if (await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
+            if(await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_CREATED);
 
             return new Response(ChannelSuccess.CHANNEL_CREATED, true, c);
         }
@@ -98,7 +111,7 @@ namespace BackIngE_N.Logic {
             c.TvgId = channel.TvgId;
             c.TvgChannelNumber = channel.TvgChannelNumber;
 
-            if (await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_UPDATED);
+            if(await _context.SaveChangesAsync() == 0) throw new Exception(ChannelError.CHANNEL_NOT_UPDATED);
 
             return new Response(ChannelSuccess.CHANNEL_UPDATED, true);
         }

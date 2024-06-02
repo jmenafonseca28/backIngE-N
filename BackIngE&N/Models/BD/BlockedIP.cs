@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace BackIngE_N.Models.BD;
 
-public partial class BlockedIp {
+public partial class BlockedIp
+{
     public Guid Id { get; set; }
 
     public string Ip { get; set; } = null!;
