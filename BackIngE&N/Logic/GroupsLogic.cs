@@ -44,18 +44,30 @@ namespace BackIngE_N.Logic {
              return new Response(GroupSuccess.GROUP_DELETED, true);
          }
 
-         /*public async Task<Response> UpdateGroup(GroupDTORequest group) {
+         public async Task<Response> UpdateGroup(GroupDTO group) {
              Group g = await _context.Groups.Where(g => g.Id == group.Id).FirstOrDefaultAsync() ?? throw new Exception(GroupError.GROUP_NOT_FOUND);
 
              g.Name = group.Name;
-             g.UserId = group.UserId;
-             _context.Groups.Add(g);
+
              await _context.SaveChangesAsync();
 
              return new Response(GroupSuccess.GROUP_UPDATED, true);
          }
 
-         public async Task<Response> GetGroup(Guid idGroup) {
+        public async Task<Response> ChangeGroup(Guid idChannel, GroupDTO group) { 
+            Channel ch = await _context.Channels.FindAsync(idChannel) ?? throw new Exception(GroupError.ERROR);
+            Group g = await _context.Groups.FindAsync(group.Id) ?? throw new Exception(GroupError.GROUP_NOT_FOUND);
+
+            ch.IdGroup = g.Id;
+            ch.IdGroupNavigation = g;
+            ch.GroupTitle = g.Name;
+
+            await _context.SaveChangesAsync();
+
+            return new Response(GroupSuccess.GROUP_UPDATED, true);
+        }
+
+         /*public async Task<Response> GetGroup(Guid idGroup) {
              return new Response(GroupSuccess.GROUP_GET, true, await _context.Groups.FindAsync(idGroup) ??
                  throw new Exception(GroupError.GROUP_NOT_FOUND));
          }*/
