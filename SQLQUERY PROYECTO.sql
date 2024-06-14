@@ -11,7 +11,6 @@ CREATE TABLE Userr (
     role VARCHAR(255) NOT NULL
 );
 
-
 CREATE TABLE PlayList (
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
     name VARCHAR(255) NOT NULL,
@@ -31,9 +30,17 @@ CREATE TABLE Channel (
     play_list_id uniqueidentifier NULL,
     order_list int not NULL DEFAULT 0,
     state bit NOT NULL DEFAULT 1,
+    id_group uniqueidentifier NULL,
+    CONSTRAINT fk_group FOREIGN KEY (id_group) REFERENCES Groups(id),
     CONSTRAINT fk_playlist FOREIGN KEY (play_list_id) REFERENCES PlayList(id) on delete cascade
 );
 
+CREATE TABLE Groups(
+    id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
+    id_playlist uniqueidentifier NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_playlist FOREIGN KEY (id_playlist) REFERENCES PlayList(id) on delete cascade
+);
 
 
 /*CREATE TABLE Channel_PlayList (
@@ -68,12 +75,16 @@ BEGIN
 END; */
 
 
+
+
 SELECT * from [Security];
 SELECT * from [BlockedIP];
 select * from Userr;
 SELECT * from PlayList;
 SELECT * from Channel;
 SELECT * from Channel_PlayList;
+SELECT * from Groups;
+
 
 update Channel set url = 'https://alba-cr-repretel-c6.stream.mediatiquestream.com/480p.m3u8' where id= '71c82815-c760-4514-8cd5-5e54cf0d5e2b'
 

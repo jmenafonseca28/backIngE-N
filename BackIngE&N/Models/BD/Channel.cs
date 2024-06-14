@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace BackIngE_N.Models.BD;
 
-public partial class Channel
-{
+public partial class Channel {
     public Guid Id { get; set; }
 
     public string Title { get; set; } = null!;
@@ -27,5 +27,10 @@ public partial class Channel
 
     public bool State { get; set; }
 
+    public Guid? IdGroup { get; set; }
+
+    public virtual Group? IdGroupNavigation { get; set; }
+
+    [JsonIgnore]
     public virtual PlayList? PlayList { get; set; }
 }

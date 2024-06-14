@@ -27,7 +27,7 @@ namespace BackIngE_N.Logic {
         }
 
         public async Task VerifyChannels() {
-            List<Channel> channels = await _context.Channels.ToListAsync() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
+            List<Channel> channels = await _context.Channels.Where(c => c.State == true).ToListAsync() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
             /*foreach(Channel ch in channels) {
                 try {
                     HttpResponseMessage response = await _httpClient.GetAsync(ch.Url);
@@ -39,22 +39,6 @@ namespace BackIngE_N.Logic {
                 }
             }*/
         }
-
-        /* public async Task<Response> FunctionalChannels() {
-
-             List<Channel> channels = await _context.Channels.Where(c => c.State == true).ToListAsync() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
-
-             /*foreach (Channel ch in channels) {
-                 try {
-                     HttpResponseMessage response = await _httpClient.GetAsync(ch.Url);
-                     if (!response.IsSuccessStatusCode && ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)) {
-                         await InactivateChannel(ch.Id);
-                     }
-                 } catch (Exception) { }
-
-             }
-             return new Response(ChannelSuccess.CHANNELS_FUNCTIONAL, true);
-         }*/
 
         public async Task<bool> InactivateChannel(Guid idChannel) {
             Channel c = await _context.Channels.FindAsync(idChannel) ?? throw new Exception(ChannelError.CHANNEL_NOT_FOUND);
@@ -76,6 +60,7 @@ namespace BackIngE_N.Logic {
                 Logo = channel.Logo,
                 TvgId = channel.TvgId,
                 TvgChannelNumber = channel.TvgChannelNumber,
+                GroupTitle = channel.GroupTitle,
                 OrderList = 0,
                 State = true
             };

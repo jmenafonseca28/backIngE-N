@@ -1,16 +1,19 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using BackIngE_N.Models.BD;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackIngE_N.Context;
 
-public partial class IngenieriaeynContext : DbContext {
-    public IngenieriaeynContext() {
+public partial class IngenieriaeynContext : DbContext
+{
+    public IngenieriaeynContext()
+    {
     }
 
     public IngenieriaeynContext(DbContextOptions<IngenieriaeynContext> options)
-        : base(options) {
+        : base(options)
+    {
     }
 
     public virtual DbSet<BlockedIp> BlockedIps { get; set; }
@@ -27,8 +30,10 @@ public partial class IngenieriaeynContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<BlockedIp>(entity => {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<BlockedIp>(entity =>
+        {
             entity.HasKey(e => e.Id).HasName("PK__BlockedI__3213E83F4711E8FB");
 
             entity.ToTable("BlockedIP");
@@ -45,7 +50,8 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasColumnName("ip");
         });
 
-        modelBuilder.Entity<Channel>(entity => {
+        modelBuilder.Entity<Channel>(entity =>
+        {
             entity.HasKey(e => e.Id).HasName("PK__Channel__3213E83FE1A7E9DD");
 
             entity.ToTable("Channel", tb => tb.HasTrigger("TR_DISORDER"));
@@ -95,26 +101,21 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasConstraintName("fk_playlist");
         });
 
-        modelBuilder.Entity<Group>(entity => {
+        modelBuilder.Entity<Group>(entity =>
+        {
             entity.HasKey(e => e.Id).HasName("PK__Groups__3213E83F11A8EAE2");
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("id");
-            entity.Property(e => e.IdPlaylist)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("id_playlist");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("name");
-
-            entity.HasOne(d => d.IdPlaylistNavigation).WithMany(p => p.Groups)
-                .HasForeignKey(d => d.IdPlaylist)
-                .HasConstraintName("fk_playlist_groups");
         });
 
-        modelBuilder.Entity<PlayList>(entity => {
+        modelBuilder.Entity<PlayList>(entity =>
+        {
             entity.HasKey(e => e.Id).HasName("PK__PlayList__3213E83F175CA317");
 
             entity.ToTable("PlayList");
@@ -134,7 +135,8 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasConstraintName("fk_user");
         });
 
-        modelBuilder.Entity<Security>(entity => {
+        modelBuilder.Entity<Security>(entity =>
+        {
             entity.HasKey(e => e.Id).HasName("PK__Security__3213E83F930700BE");
 
             entity.ToTable("Security");
@@ -152,7 +154,8 @@ public partial class IngenieriaeynContext : DbContext {
             entity.Property(e => e.StatusLogin).HasColumnName("status_login");
         });
 
-        modelBuilder.Entity<Userr>(entity => {
+        modelBuilder.Entity<Userr>(entity =>
+        {
             entity.HasKey(e => e.Id).HasName("PK__Userr__3213E83F8F800657");
 
             entity.ToTable("Userr");
@@ -193,3 +196,4 @@ public partial class IngenieriaeynContext : DbContext {
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
+*/

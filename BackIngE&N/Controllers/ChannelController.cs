@@ -30,16 +30,6 @@ namespace BackIngE_N.Controllers {
             }
         }
 
-        /*[HttpGet]
-        [Route("FunctionalChannels/{idPlaylist}")]
-        public async Task<Response> FunctionalChannels(Guid idPlaylist) {
-            try {
-                return await _channelLogic.FunctionalChannels(idPlaylist);
-            } catch (Exception e) {
-                return new Response(ChannelError.CHANNEL_NOT_FOUND, false, e.Message);
-            }
-        }*/
-
         [HttpPatch]
         [Route("ToggleOrder/{idChannel}/{newOrder}")]
         public async Task<Response> ToggleOrder(Guid idChannel, int newOrder) {
@@ -55,9 +45,7 @@ namespace BackIngE_N.Controllers {
         public async Task<Response> CreateChannel(ChannelDTO channel) {
             try {
                 return await _channelLogic.CreateChannel(channel);
-            } catch (DbUpdateException e) {
-                return new Response(ChannelError.CHANNEL_ALREADY_EXISTS, false, e.Message);
-            } catch (Exception e) {
+            }  catch (Exception e) {
                 return new Response(ChannelError.CHANNEL_NOT_CREATED, false, e.Message);
             }
         }

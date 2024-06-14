@@ -13,5 +13,7 @@ public partial class PlayList
 
     public virtual ICollection<Channel> Channels { get; set; } = new List<Channel>();
 
+    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+
     public virtual Userr User { get; set; } = null!;
 }
