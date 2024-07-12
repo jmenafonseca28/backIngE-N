@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BackIngE_N.Models.BD;
 using Microsoft.EntityFrameworkCore;
+using BackIngE_N.Models.BD;
 
 namespace BackIngE_N.Context;
 
@@ -16,8 +16,6 @@ public partial class IngenieriaeynContext : DbContext {
     public virtual DbSet<BlockedIp> BlockedIps { get; set; }
 
     public virtual DbSet<Channel> Channels { get; set; }
-
-    public virtual DbSet<Group> Groups { get; set; }
 
     public virtual DbSet<PlayList> PlayLists { get; set; }
 
@@ -57,7 +55,6 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("group_title");
-            entity.Property(e => e.IdGroup).HasColumnName("id_group");
             entity.Property(e => e.Logo)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -85,33 +82,10 @@ public partial class IngenieriaeynContext : DbContext {
                 .IsUnicode(false)
                 .HasColumnName("url");
 
-            entity.HasOne(d => d.IdGroupNavigation).WithMany(p => p.Channels)
-                .HasForeignKey(d => d.IdGroup)
-                .HasConstraintName("fk_group");
-
             entity.HasOne(d => d.PlayList).WithMany(p => p.Channels)
                 .HasForeignKey(d => d.PlayListId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_playlist");
-        });
-
-        modelBuilder.Entity<Group>(entity => {
-            entity.HasKey(e => e.Id).HasName("PK__Groups__3213E83F11A8EAE2");
-
-            entity.Property(e => e.Id)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("id");
-            entity.Property(e => e.IdPlaylist)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("id_playlist");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-
-            entity.HasOne(d => d.IdPlaylistNavigation).WithMany(p => p.Groups)
-                .HasForeignKey(d => d.IdPlaylist)
-                .HasConstraintName("fk_playlist_groups");
         });
 
         modelBuilder.Entity<PlayList>(entity => {

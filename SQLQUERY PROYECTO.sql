@@ -35,12 +35,12 @@ CREATE TABLE Channel (
     CONSTRAINT fk_playlist FOREIGN KEY (play_list_id) REFERENCES PlayList(id) on delete cascade
 );
 
-CREATE TABLE Groups(
+/*CREATE TABLE Groups(
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
     id_playlist uniqueidentifier NOT NULL,
     name VARCHAR(255) NOT NULL,
     CONSTRAINT fk_playlist FOREIGN KEY (id_playlist) REFERENCES PlayList(id) on delete cascade
-);
+);*/
 
 
 /*CREATE TABLE Channel_PlayList (
@@ -85,6 +85,13 @@ SELECT * from Channel;
 SELECT * from Channel_PlayList;
 SELECT * from Groups;
 
+alter TABLE Channel drop column id_group;
+
+drop TABLE Groups;
+
+delete from [Security] where ip = '::1';
+delete from Userr where id = '518903f3-dd6a-4635-b2e6-8241af6149c8';
+delete from PlayList where id = '23fd698f-3c96-4c35-8dda-f54e40134ce2';
 
 update Channel set url = 'https://alba-cr-repretel-c6.stream.mediatiquestream.com/480p.m3u8' where id= '71c82815-c760-4514-8cd5-5e54cf0d5e2b'
 

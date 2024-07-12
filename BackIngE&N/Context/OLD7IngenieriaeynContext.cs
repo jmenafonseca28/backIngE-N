@@ -24,6 +24,7 @@ public partial class IngenieriaeynContext : DbContext {
     public virtual DbSet<Userr> Userrs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<BlockedIp>(entity => {
             entity.HasKey(e => e.Id).HasName("PK__BlockedI__3213E83F4711E8FB");
@@ -43,17 +44,27 @@ public partial class IngenieriaeynContext : DbContext {
         });
 
         modelBuilder.Entity<Channel>(entity => {
-            entity.HasKey(e => e.Id).HasName("PK__Channel__3213E83F8A6ECE67");
-            entity.ToTable("Channel", tb => tb.UseSqlOutputClause(false));
+            entity.HasKey(e => e.Id).HasName("PK__Channel__3213E83FE1A7E9DD");
+
+            entity.ToTable("Channel", tb => tb.HasTrigger("TR_DISORDER"));
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("id");
+            entity.Property(e => e.GroupTitle)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("group_title");
+            entity.Property(e => e.IdGroup).HasColumnName("id_group");
             entity.Property(e => e.Logo)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("logo");
-            entity.Property(e => e.PlaylistId).HasColumnName("playlist_id");
+            entity.Property(e => e.OrderList).HasColumnName("order_list");
+            entity.Property(e => e.PlayListId).HasColumnName("play_list_id");
+            entity.Property(e => e.State)
+                .HasDefaultValue(true)
+                .HasColumnName("state");
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -71,17 +82,10 @@ public partial class IngenieriaeynContext : DbContext {
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("url");
-            entity.Property(e => e.GroupTitle)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("group_title");
-            entity.Property(e => e.OrderList).HasColumnName("order_list");
 
-            entity.Property(e => e.State).HasColumnName("state");
-
-            entity.HasOne(d => d.Playlist).WithMany(p => p.Channels)
-                .HasForeignKey(d => d.PlaylistId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+            entity.HasOne(d => d.PlayList).WithMany(p => p.Channels)
+                .HasForeignKey(d => d.PlayListId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_playlist");
         });
 

@@ -13,7 +13,7 @@ namespace BackIngE_N.Daemons {
         }
 
         public Task StartAsync(CancellationToken cancellationToken) {
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(10));
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromDays(1));
             return Task.CompletedTask;
         }
 

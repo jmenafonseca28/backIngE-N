@@ -24,7 +24,6 @@ builder.Services.AddScoped<SecurityLogic>();
 builder.Services.AddScoped<PlayListLogic>();
 builder.Services.AddScoped<ChannelLogic>();
 builder.Services.AddScoped<ExportImportLogic>();
-builder.Services.AddScoped<GroupsLogic>();
 
 //Agrega el contexto de la base de datos
 builder.Services.AddDbContext<IngenieriaeynContext>(options =>
