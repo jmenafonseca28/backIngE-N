@@ -85,11 +85,13 @@ SELECT * from Channel;
 SELECT * from Channel_PlayList;
 SELECT * from Groups;
 
-alter TABLE Channel drop column id_group;
+--alter TABLE Channel drop column id_group;
 
-drop TABLE Groups;
+--drop TABLE Groups;
 
 delete from [Security] where ip = '::1';
+delete from [Security] where status_login = '0';
+DELETE from BlockedIP where not ip = '::1';
 delete from Userr where id = '518903f3-dd6a-4635-b2e6-8241af6149c8';
 delete from PlayList where id = '23fd698f-3c96-4c35-8dda-f54e40134ce2';
 

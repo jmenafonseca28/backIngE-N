@@ -31,7 +31,7 @@ namespace BackIngE_N.Logic
         public async Task<Response> Login(UserBase user, IPAddress? ip) {
 
             if (ip != null) {
-                if (await _securityLogic.isBlockedIP(ip)) throw new Exception(UserrError.IP_BLOCKED);
+                if (await _securityLogic.IsBlockedIP(ip)) throw new Exception(UserrError.IP_BLOCKED);
                 await _securityLogic.ValidateIP(ip);
             }
 

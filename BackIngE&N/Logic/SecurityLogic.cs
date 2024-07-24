@@ -18,23 +18,24 @@ namespace BackIngE_N.Logic
         /// </summary>
         /// <param name="ip">The ip to verify</param>
         /// <returns>A boolean if is blocked or not</returns>
-        public async Task<bool> isBlockedIP(IPAddress ip) {
+        public async Task<bool> IsBlockedIP(IPAddress ip) {
             if (ip == null) return false;
-            return await _context.BlockedIps.Where(b => b.Ip == ip.ToString()).FirstOrDefaultAsync() != null;
+            BlockedIp b = await _context.BlockedIps.Where(b => b.Ip == ip.ToString()).FirstOrDefaultAsync();
+            return b != null;
         }
 
         /// <summary>
         /// Unblock an IP.
         /// </summary>
         /// <param name="ip">The ip to unblock</param>
-        public void UnblockIP(IPAddress ip) {
+        public async void UnblockIP(IPAddress ip) {
             if (ip == null) return;
 
             BlockedIp b = _context.BlockedIps.Where(b => b.Ip == ip.ToString()).FirstOrDefault();
 
             if (b != null) {
                 _context.BlockedIps.Remove(b);
-                _ = _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -48,8 +49,6 @@ namespace BackIngE_N.Logic
                 BlockTime = DateTime.Now
             });
 
-            Console.WriteLine($"IP {ip} blocked");
-
             await _context.SaveChangesAsync();
         }
 
@@ -61,15 +60,15 @@ namespace BackIngE_N.Logic
 
             if (ip == null) return;
 
-            int threshold = 1; // Número de intentos fallidos necesarios para bloquear la IP
-            int blockDurationMinutes = 5; // Duración del bloqueo en minutos
+            int attempts = 1000; 
+            int blockDurationMinutes = 5; // Tiempo en el cual se bloquea la ip si se excede el numero de intentos
             DateTime blockStartTime = DateTime.Now.AddMinutes(-blockDurationMinutes);
 
             int count = await _context.Securities
                 .Where(s => s.Ip == ip.ToString() && s.LoginTime > blockStartTime && s.StatusLogin == false)
                 .CountAsync();
 
-            if (count >= threshold) {
+            if (count >= attempts) {
                 await BlockIP(ip);
             }
         }
