@@ -19,11 +19,14 @@ namespace BackIngE_N.Logic {
             _httpClient = httpClient;
         }
 
-        public async Task<Response> GetChannelsByPlaylist(Guid idPlaylist) {
+        public async Task<IResponse<Object>> GetChannelsByPlaylist(int page, Guid idPlaylist) {
+            int pageSize = 10;
+            int skipAmount = (page - 1) * pageSize;
             PlayList p = await _context.PlayLists.Where(c => c.Id == idPlaylist).Include(p => p.Channels).FirstOrDefaultAsync() ?? throw new Exception(PlayListError.PLAYLIST_NOT_FOUND);
-            List<Channel> channels = p.Channels.Where(c => c.State == true).ToList() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
-
-            return new Response(ChannelSuccess.CHANNELS_GET, true, channels);
+            List<Channel> channels = p.Channels.Where(c => c.State == true).Skip(skipAmount).Take(pageSize).ToList() ?? throw new Exception(ChannelError.CHANNELS_NOT_FOUND);
+            int count = p.Channels.Count;
+            int totalPages = (int)Math.Ceiling((double)count / pageSize);
+            return new Response(ChannelSuccess.CHANNELS_GET, true, new PaginationResponse(page, pageSize, totalPages, count, channels));
         }
 
         public async Task VerifyChannels() {

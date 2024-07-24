@@ -64,18 +64,12 @@ namespace BackIngE_N.Logic {
 
                     if (ch.Title == "") ch.Title = ch.TvgId;
 
-                    if (ch.Url == "" || ch.Title == "") {
+                    if (ch.Url == "" || ch.Title == "" || !ch.Url.EndsWith(".m3u8")) {
                         unFunctionalChannels.Add(ch);
                         continue;
                     }
 
-                    if (_context.Channels.All(c => c.Url != ch.Url)) {
-                        p.Channels.Add(ch);
-                    } else {
-                        Channel chn = await _context.Channels.Where(c => c.Url == ch.Url).FirstOrDefaultAsync();
-                        if (chn != null) p.Channels.Add(chn);
-                        unFunctionalChannels.Add(ch);
-                    }
+                    p.Channels.Add(ch);
                 }
             }
             await _context.SaveChangesAsync();

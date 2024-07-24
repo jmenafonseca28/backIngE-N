@@ -1,5 +1,5 @@
 ﻿namespace BackIngE_N.Models {
-    public class Response {
+    public class Response : IResponse<Object> {
         /// <summary>
         /// Gets or sets the message associated with the response.
         /// </summary>

@@ -38,8 +38,8 @@ builder.Services.AddCors(options => {
                .AllowAnyHeader());
     options.AddPolicy("AllowIonic",
                builder => builder
-               .WithOrigins("http://localhost:8101", "http://localhost:8100")
                .WithMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+               .AllowAnyOrigin()
                .AllowAnyHeader());
 });
 

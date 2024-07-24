@@ -3,6 +3,7 @@ using BackIngE_N.Config.Messages.Channel;
 using BackIngE_N.Logic;
 using BackIngE_N.Models;
 using BackIngE_N.Models.DTO.Channel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BackIngE_N.Controllers {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ChannelController : ControllerBase {
 
         private readonly ChannelLogic _channelLogic;
@@ -21,10 +23,10 @@ namespace BackIngE_N.Controllers {
         }
 
         [HttpGet]
-        [Route("GetChannelsByPlaylist/{idPlaylist}")]
-        public async Task<Response> GetChannelsByPlaylist(Guid idPlaylist) {
+        [Route("GetChannelsByPlaylist/{idPlaylist}/{page}")]
+        public async Task<IResponse<Object>> GetChannelsByPlaylist(Guid idPlaylist, int page) {
             try {
-                return await _channelLogic.GetChannelsByPlaylist(idPlaylist);
+                return await _channelLogic.GetChannelsByPlaylist(page, idPlaylist);
             } catch (Exception e) {
                 return new Response(ChannelError.CHANNEL_NOT_FOUND, false, e.Message);
             }
@@ -45,7 +47,7 @@ namespace BackIngE_N.Controllers {
         public async Task<Response> CreateChannel(ChannelDTO channel) {
             try {
                 return await _channelLogic.CreateChannel(channel);
-            }  catch (Exception e) {
+            } catch (Exception e) {
                 return new Response(ChannelError.CHANNEL_NOT_CREATED, false, e.Message);
             }
         }

@@ -57,8 +57,7 @@ namespace BackIngE_N.Controllers
         [Route("deletePlayList/{id}")]
         public async Task<Response> DeletePlayList(Guid id) {
             try {
-                await _playListLogic.DeletePlayList(id);
-                return new Response(PlayListSuccess.PLAYLIST_DELETED, true);
+                return  await _playListLogic.DeletePlayList(id);
             } catch (Exception e) {
                 return new Response(GeneralMessages.ERROR, false, e.Message);
             }
