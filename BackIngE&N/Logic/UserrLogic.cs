@@ -9,8 +9,7 @@ using BackIngE_N.Context;
 using BackIngE_N.Models.DTO.UserrDto;
 using BackIngE_N.Models.BD;
 
-namespace BackIngE_N.Logic
-{
+namespace BackIngE_N.Logic {
     public class UserrLogic {
 
         private readonly IngenieriaeynContext _context;
@@ -96,6 +95,30 @@ namespace BackIngE_N.Logic
 
             return await _context.SaveChangesAsync() > 0 ? new Response(UserrSuccess.USER_CREATED, true) : new Response(UserrError.USER_NOT_CREATED, false);
 
+        }
+
+        public async Task<IResponse<Object>> ChangePassword(Guid idUser, PasswordDTO pass) {
+            Userr u = await _context.Userrs.Where(u => u.Id == idUser).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USER_NOT_FOUND);
+
+            if (!_bCrypt.Verify(pass.Password, u.Password)) throw new Exception(UserrError.INCORRECT_PASSWORD);
+
+            u.Password = _bCrypt.HashPassword(pass.NewPassword);
+
+            _context.Userrs.Update(u);
+
+            return await _context.SaveChangesAsync() > 0 ? new Response(UserrSuccess.PASSWORD_UPDATED, true) : new Response(UserrError.PASSWORD_NOT_UPDATED, false);
+        }
+
+        public async Task<IResponse<Object>> Update(Guid idUser, UserDTO user) {
+            Userr u = await _context.Userrs.Where(u => u.Id == idUser).FirstOrDefaultAsync() ?? throw new Exception(UserrError.USER_NOT_FOUND);
+
+            u.Name = user.Name;
+            u.LastName = user.LastName;
+            u.Email = user.Email;
+
+            _context.Userrs.Update(u);
+
+            return await _context.SaveChangesAsync() > 0 ? new Response(UserrSuccess.USER_UPDATED, true, u) : new Response(UserrError.USER_NOT_UPDATED, false, user);
         }
     }
 }

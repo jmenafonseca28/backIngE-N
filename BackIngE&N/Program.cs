@@ -78,7 +78,7 @@ if (app.Environment.IsDevelopment()) {
 }
 
 //app.UseHttpsRedirection();
-app.UseCors("AllowIonic");
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 

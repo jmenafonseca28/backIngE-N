@@ -5,11 +5,14 @@ CREATE TABLE Userr (
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),
     name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(512) NOT NULL,
     token VARCHAR(512) NULL,
     role VARCHAR(255) NOT NULL
 );
+
+--Agregale unique a email
+ALTER TABLE Userr ADD CONSTRAINT UQ_Userr_Email UNIQUE (email);
 
 CREATE TABLE PlayList (
     id uniqueidentifier PRIMARY KEY DEFAULT NEWID(),

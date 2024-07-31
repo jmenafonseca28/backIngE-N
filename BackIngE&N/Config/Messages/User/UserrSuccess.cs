@@ -7,6 +7,7 @@
         public const string USER_UPDATED = "Usuario actualizado";
         public const string USER_DELETED = "Usuario eliminado";
         public const string LOGIN_SUCCESS = "Usuario al iniciar";
+        public const string PASSWORD_UPDATED = "Contraseña actualizada";
 
     }
 }
